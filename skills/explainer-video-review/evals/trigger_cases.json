@@ -1,0 +1,37 @@
+{
+  "positive_concepts": {
+    "source_material": ["MP4", "成片", "视频成片", "已渲染", "视频"],
+    "authoring_action": ["审查", "检查", "复核", "审阅", "找出问题", "质量审查"],
+    "deliverable": ["报告", "时间戳", "review-report", "问题清单", "修复建议", "证据"],
+    "implementation": ["字幕", "音画同步", "音画", "视觉", "动效", "转场", "空间", "逐帧", "时序"],
+    "quality_boundary": ["质量", "major", "blocker", "缺陷", "同步"],
+    "skill": ["Skill", "timeline.json", "review-report.json", "生产 Skill"],
+    "handoff": ["交给生产", "复渲", "重渲染", "修复后复审"]
+  },
+  "negative_patterns": [
+    "只改写",
+    "只做字幕",
+    "新建视频",
+    "制作成",
+    "设计概念动效",
+    "参考视频分析",
+    "已有实拍素材"
+  ],
+  "should_trigger": [
+    {"text": "审查这个概念动效视频成片，输出带时间戳的问题清单", "family": "post-render-audit"},
+    {"text": "检查这个 MP4 的字幕、音画同步、转场和空间连贯性", "family": "media-quality-review"},
+    {"text": "根据 timeline.json 逐帧复核成片，找出 major 和 blocker 问题", "family": "timeline-grounded-review"},
+    {"text": "把视频审查结果整理成 review-report.json，再交给生产 Skill 修复", "family": "repair-handoff"}
+  ],
+  "should_not_trigger": [
+    {"text": "只改写这篇文章的口播文案，不审查视频", "family": "script-rewrite"},
+    {"text": "给已有实拍素材只做字幕", "family": "caption-only"},
+    {"text": "把这份文案制作成概念动效视频", "family": "new-production"},
+    {"text": "做参考视频分析，拆解镜头和剪辑节奏", "family": "reference-study"}
+  ],
+  "near_neighbor": [
+    {"text": "分析这个 MP4 的内容并写一份主题摘要", "family": "content-summary"},
+    {"text": "把一段已有实拍素材剪成带字幕的短视频", "family": "footage-editing"},
+    {"text": "为一个新主题设计概念动效视频方案", "family": "creative-direction"}
+  ]
+}

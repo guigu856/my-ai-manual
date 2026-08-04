@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "id": "complete-audit",
+      "input": "MP4 + segments.json + timeline.json + captions.srt + narration.wav",
+      "expected": {
+        "required_files": ["review-manifest.json", "review-report.json"],
+        "dimension_ids": ["visual_expression", "spatial_continuity", "temporal_alignment", "subtitle_readability"],
+        "status_values": ["pass", "warn", "fail", "missing_evidence"],
+        "finding_fields": ["id", "dimension", "status", "severity", "confidence", "evidence", "repair"]
+      }
+    },
+    {
+      "id": "missing-basis",
+      "input": "MP4 only; frozen script, timeline and audio are absent",
+      "expected": {
+        "overall_status": "missing_evidence",
+        "missing_evidence": ["frozen_script", "timeline", "audio", "human_playback_review"],
+        "claim_boundary": "observable frame findings only"
+      }
+    },
+    {
+      "id": "repair-handoff",
+      "input": "review report contains a major timing finding",
+      "expected": {
+        "handoff_target": "script-to-explainer-video",
+        "rerender_required": true,
+        "new_media_fingerprint_required": true,
+        "re_review_required": true
+      }
+    }
+  ],
+  "missing_evidence": [
+    "provider-backed render evidence",
+    "real playback observation",
+    "human acceptance decision"
+  ]
+}

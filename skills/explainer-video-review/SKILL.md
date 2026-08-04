@@ -1,159 +1,109 @@
 ---
 name: explainer-video-review
-description: 对口播/概念动效视频成片做逐帧质量审查：按视觉表达、空间一致、时序对齐、字幕规范四大维度检查动效设计、元素位置与交互、音画同步[...]
-version: 1.0.0
+description: |
+  Use this Agent Skill when a user provides an existing rendered MP4 or concept-motion explainer video and asks for a post-render audit, frame-based review, subtitle check, visual-quality review, spatial-continuity review, or audio-sync review. It checks visual expression, spatial continuity, temporal alignment, subtitles, and delivery integrity, then produces evidence-linked findings and a repair handoff. Trigger on requests such as “审查这个解说视频成片”“检查字幕和音画同步”“逐帧找出动效问题”。Exclude script-only rewriting, new video production, existing-footage editing, reference-video study, and generic media recommendations; route production to `script-to-explainer-video` and reference study to the repository's reference-study Skill.
+metadata:
+  author: guigu856
+  version: "1.1.0"
 ---
 
-# 概念动效视频成片审查
+# 概念动效视频成片审查 Skill
 
-## 审查输入与操作方式
+## 职责边界
 
-1. 收齐三样：成片 mp4、冻结文稿（字幕/内容对位基准）、制作要求（若有）。先通读文稿，标出段落边界和所有枚举清单（几项、什么顺序、什么用词[...]） 这些东西有则从上下文获取 以及文稿上下文无明确物 则自己从视频提取
-2. 抽帧：默认抽帧粒度为 1s/帧。动效密集或转场段落可加密到 0.5s/帧 或更高频率。抽帧参数须在审查开始前由 agent 与用户确认（见下文）。也可拼 N×N 接触表快速浏览。
-3. 长片分段并行审查：每段独立过四个维度，最后汇编去重。
-4. 声音必须听：音画同步类问题只看帧查不出来，抽帧段落要配合该段音频核对。
-5. 客观指标先检查：视频帧数与时长的匹配度、音频质量、配音音色。
-6. 输出纪律：不许泛泛表扬，直接出问题清单。
+本 Skill 负责对已经渲染的口播或概念动效视频做 post-render audit：
 
-## 审查流程（按维度逐步执行）
+- 建立审查基准、媒体清单和可复现的抽样计划
+- 先做媒体、字幕、时间轴和音频的结构检查，再做画面与声音审查
+- 按视觉表达、空间连续、时序对齐、字幕可读性四个维度记录证据链
+- 输出带时间戳、证据引用、严重级和修复建议的问题报告
+- 将需要源文件修复的问题交给 `../script-to-explainer-video/SKILL.md`，修复后整片重渲染并复审
 
----
-## 审查流程
-1.审查前先与用户劝人抽帧频率
-2.按四个维度逐步审查，完成后在聊天上下文直接输出问题清单。
-3.一个维度为一个单元任务，一次单元任务为一次输出结果，用户确认修改项后，进行修改完成此维度，确认完成才能进行下一维度
-4.报告单可视情况可直接输出或者写一个md文档,看长度
-5.每个维度单元分析可自行规划子agent完成任务然后进行汇总输出报告，也可不用划分子agent，看任务情况
----
+审查阶段保持源文件和成片只读；用户明确要求执行修复时，仍沿用生产 Skill 的时间轴契约，不在本 Skill 内另造制作流程。
 
-## 维度一：视觉表达与信息聚焦
+## 输入与输出
 
-审查对象：**每一帧的画面元素与动效设计是否服务于核心观点的突出表达**——信息焦点是否明确、视觉形式是否克制且有意义。
+最低输入：
 
-一句话判据：任意帧暂停，观众能否在 1 秒内说出"这一帧想让我理解什么"。
+- 已渲染 MP4 或可读取的成片视频
 
-### 1.1 核心观点突出度
+推荐输入：
 
-- 画面设计是否真的在围绕此处想表达的观点在设计。
-- 整体元素组合是否符合当前语境：是否起到核心观点显化性。
-- 画面设计是否起到能帮助用户理解核心观点的辅助性作用。
-- 主体元素占比是否足够：以手机小屏模拟（约 360px 宽），标题/节点/标签是否仍可辨认。
-- 有无与表达无关的元素：装饰填充、栏目名、状态信息、编号、版本、数据、英文小字、品牌 logo 充当通用图标。
-- 元素重复：同一概念是否两处呈现（既做独立节点又出现在容器列项里）。
+- 冻结文稿或 `segments.json`
+- `timeline.json`、字幕文件、最终配音
+- 制作要求、平台规格、目标比例和用户重点关注项
 
-### 1.2 文字与标题设计
+输出：
 
-- 画面文字是否只留核心标题、短判断、模块名；有无描述性副文本小字（尤其与字幕重复）。
-- 标题是否只做短点题（点题词或模块名），有无变成长句复述字幕。
-- 标题与字幕是否同屏同义复读。
-- 有无大段文字朗读倾向。
-- 标题或文字是否起到突出核心观点的作用，让用户一看就知道此处要讲什么。
-- 模块名用词与配音是否逐字对应；全片同一术语是否统一。
+- `review-manifest.json`：媒体指纹、规格、基准、采样计划和证据范围
+- `review-report.json`：摘要、四维结果、问题清单、严重级和复核状态
+- 可读 Markdown 问题清单或聊天内摘要
+- 源文件修复、整片重渲染和复审的交接说明
 
-### 1.3 动效语义合理性
+缺失的冻结文稿、时间轴、原始音频或人审结果写入 `missing_evidence`，不用推测结果填补证据空洞。
 
-- 动效是否在传达概念（方向、变化、关系本身有意义），还是为了动而动。
-- 枚举项出现顺序、数量与文稿是否一一对应。
-- 枚举标注完整性：该段配音结束时所有项是否全部到位。
-- 图标/图形语义是否准确。
+## Router Rules
 
----
+- Trigger when an existing MP4 or rendered explainer video needs a post-render audit, quality review, subtitle review, frame review, or audio-sync review.
+- Use the four review dimensions and return evidence-linked findings; a report is the primary deliverable.
+- Route new script-to-video production to `../script-to-explainer-video/SKILL.md`.
+- Route reference-video learning, shot breakdown, and editing-grammar extraction to the repository's reference-study Skill.
+- Exclude script-only rewriting, caption-only generation without a video review, existing-footage editing, and generic media advice.
 
-## 维度二：空间一致与动效连贯
+## Compact Workflow
 
-审查对象：**元素之间的位置、轨迹、进出场关系在全过程中是否保持秩序**——不只看某帧整齐，而是全过程都有秩序。
+1. Inventory the MP4, available frozen sources, requirements, and tool availability.
+2. Generate a deterministic sampling plan; use quick, standard, or dense review based on duration and motion density.
+3. Run structural preflight for media metadata, audio presence, subtitle coverage, timeline alignment, and render integrity.
+4. Review visual expression, spatial continuity, temporal alignment, and subtitle readability against the same evidence bundle.
+5. Record findings with timestamps, evidence references, severity, confidence, and repair scope.
+6. Return one complete report; group fixable source defects into a repair handoff and request a new full render for re-review.
 
-一句话判据：从头到尾连续播放，有没有任何一帧让你"跳戏"。
+## Gate Ladder
 
-### 2.1 位置与对齐
+- **Input gate**: the MP4 is readable and the review basis is recorded; missing artifacts receive an evidence label.
+- **Media gate**: duration, frame rate, dimensions, stream presence, and audio state are recorded.
+- **Evidence gate**: every finding points to a timestamp, frame, audio window, subtitle cue, or source artifact.
+- **Dimension gate**: all four dimensions are reviewed or explicitly marked `missing_evidence`.
+- **Triage gate**: each finding has severity, confidence, repair scope, and pass/warn/fail status.
+- **Handoff gate**: source defects point back to the production Skill; a repaired source requires full rerender and a new report.
 
-- 元素是否按锚点/网格对齐：有无位置漂移、线条偏移、连线错位。
-- 文字之间、文字与图形之间有无重叠、遮挡、裁切、出画。
-- 同类元素（圆点、节点）数量在相邻帧间是否稳定。
-- 父子元素是否联动：标题与其所属图形、容器与其内容物是否作为一组同进同出。
+## Output Contract
 
-### 2.2 运动轨迹连贯性
+- `review-report.json` and the human-readable report use the same finding IDs, timestamps, severity, status, and evidence references.
+- Status values are `pass`, `warn`, `fail`, and `missing_evidence`; severity values are `blocker`, `major`, `minor`, and `note`.
+- A finding without a concrete evidence reference remains a hypothesis and keeps that label until evidence is attached.
+- A complete pass requires media preflight, four dimension results, and a recorded output/review evidence boundary.
+- Provider playback, human perception, and external render evidence remain `missing_evidence` until observed.
 
-- 相邻帧间元素有无位置跳变。
-- 每个动画是否有明确起点和落点，中途无抖动、无回拉。
-- 运动是否可追踪：快速运动中元素身份是否丢失。
+## 审查维度
 
-### 2.3 进出场与转场
+- [审查契约、报告和状态](references/review-contract.md)
+- [采样策略与证据链](references/sampling-and-evidence.md)
+- [四维检查规则](references/four-dimensions.md)
+- [修复交接与复审循环](references/repair-handoff.md)
 
-- 元素消失是否有过渡（收缩/淡出 ≥0.5s）；一帧内从满屏变空白是断崖消失。
-- 转场是否为元素重组；**整场硬切（元素全消失+新场景瞬现）是违规**。
-- 新段落配音开始后画面是否仍停留上一段内容 >1s。
-- 过渡帧新旧是否共存打架。
-- 多元素变化是否拆拍完成，还是同帧瞬变。
-- 鬼影与残影：进度为 0 的线是否渲染成孤点、父级 scale=0 时子元素是否提前显形。
-- 两条线经过同一区域是否打架。
+## 默认参数
 
----
+| 参数 | 默认值 | 覆盖条件 |
+|---|---|---|
+| 审查档位 | standard | 用户指定 quick 或密集动效、转场、快速字幕时覆盖 |
+| 初始采样 | 1s/帧或每段首中尾 | 动效密集段加密到 0.25–0.5s/帧 |
+| 音频核对 | 每个高风险 cue 前后各 1s | 音画同步问题或用户指定区间覆盖 |
+| 手机可读性 | 约 360px 宽等效检查 | 平台指定画布和安全区优先 |
+| 报告方式 | Markdown 摘要 + JSON 证据 | 长片或自动化复核时保留完整 JSON |
 
-## 维度三：时序对齐精度
+## 资源与验证
 
-审查对象：**声音、动效、字幕三条轨道是否以配音为基准精确同步**——听到什么，同时看到什么。
+- 报告校验：`python scripts/validate_review_report.py --input <review-report.json>`
+- 采样计划：`python scripts/build_sample_plan.py --duration <seconds> --preset standard`
+- 触发回归：`python C:/Users/32249/.codex/skills/qiaomu-meta-skill/scripts/trigger_eval.py . --cases evals/trigger_cases.json`
+- 包校验：`python C:/Users/32249/.codex/skills/qiaomu-meta-skill/scripts/validate_skill.py .`
 
-一句话判据：闭眼听 → 睁眼看，画面展现的内容是否恰好是听到的。
+## 完成条件
 
-### 3.1 配音与整体对位
-
-- 第一帧与首段配音起点是否对齐；段间间隔是否均匀。
-- 画面段落切换点是否 ≤ 配音新段落起点。
-
-### 3.2 动效节拍与配音同步
-
-- 枚举逐项出现节奏是否跟随配音。
-- 抢跑：配音要念 5–6s 的枚举，画面 2s 铺完然后静止等配音。
-- 滞后：配音已念到某项，对应元素迟迟未出。
-- 图标/标签出现时机与字幕、配音是否同帧或略提前；先出空框后补文字是不同步。
-- 标题切换点是否对齐配音说到该内容的时刻。
-
-### 3.3 字幕与配音对位
-
-- 字幕出现时间是否与句级 cue 相符。
-- 字幕文本是否是配音逐字原文。
-- 字幕切换是否跟随配音。
-
----
-
-## 维度四：字幕规范与可读性
-
-审查对象：**字幕作为独立阅读通道是否规范、连续、完整、可读**——它是听障/静音场景下唯一的信息通道。
-
-一句话判据：关掉声音只看字幕，能否顺畅读完并完全理解。
-
-### 4.1 标点与文本
-
-- 句末是否无标点。
-- 全片标点是否全角统一。
-- 字幕文本与配音是否逐字一致。
-
-### 4.2 时序连续与完整性
-
-- 字幕是否连续覆盖全片；转场处是否无字幕真空。
-- 单条字幕语义是否完整，完整意群是否被截断。
-- 双音节词是否跨条拆开。
-- 切换节奏是否恰当。
-
-### 4.3 版面与长度
-
-- 每条字幕是否只有一行。
-- 单条是否超画布一行容量；超宽文字是否被裁切/溢出。
-- 字幕字号在手机尺寸下是否清晰可辨。
-
----
-
----
-
-## 输出格式
-
-示例：
-
-【维度】 编号 | 时间戳 | 问题描述 | 严重级 | 修复建议 ...
-
-
-修复建议要具体到"改什么、改成什么"，不写空泛意见。
-
-**分析完成后立即删除所有临时工作文件（抽帧图片、音频片段等）。**
-
+- 媒体规格和审查基准已经记录
+- 抽样计划可复现，所有发现都有证据引用或明确标记为 `missing_evidence`
+- 四个维度均有结果，严重级和修复范围清楚
+- 报告通过结构校验，交接对象和复审条件明确
+- 成片修复后使用新版本整片复渲，并重新生成报告

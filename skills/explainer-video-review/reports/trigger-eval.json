@@ -1,0 +1,175 @@
+{
+  "ok": true,
+  "threshold": 0.34,
+  "description_concepts": [
+    "authoring_action",
+    "implementation",
+    "quality_boundary",
+    "skill",
+    "source_material"
+  ],
+  "missing_description_concepts": [],
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "false_positive": 0,
+    "false_negative": 0,
+    "pass_rate": 1.0
+  },
+  "failures": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "审查这个概念动效视频成片，输出带时间戳的问题清单",
+        "family": "post-render-audit",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "implementation",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "检查这个 MP4 的字幕、音画同步、转场和空间连贯性",
+        "family": "media-quality-review",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.8,
+        "matched_concepts": [
+          "authoring_action",
+          "implementation",
+          "quality_boundary",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "根据 timeline.json 逐帧复核成片，找出 major 和 blocker 问题",
+        "family": "timeline-grounded-review",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "authoring_action",
+          "implementation",
+          "quality_boundary",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把视频审查结果整理成 review-report.json，再交给生产 Skill 修复",
+        "family": "repair-handoff",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "只改写这篇文章的口播文案，不审查视频",
+        "family": "script-rewrite",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "authoring_action",
+          "source_material"
+        ],
+        "negative_pattern": "只改写"
+      },
+      {
+        "prompt": "给已有实拍素材只做字幕",
+        "family": "caption-only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "implementation"
+        ],
+        "negative_pattern": "只做字幕"
+      },
+      {
+        "prompt": "把这份文案制作成概念动效视频",
+        "family": "new-production",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "implementation",
+          "source_material"
+        ],
+        "negative_pattern": "制作成"
+      },
+      {
+        "prompt": "做参考视频分析，拆解镜头和剪辑节奏",
+        "family": "reference-study",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "negative_pattern": "参考视频分析"
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "分析这个 MP4 的内容并写一份主题摘要",
+        "family": "content-summary",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把一段已有实拍素材剪成带字幕的短视频",
+        "family": "footage-editing",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "implementation",
+          "source_material"
+        ],
+        "negative_pattern": "已有实拍素材"
+      },
+      {
+        "prompt": "为一个新主题设计概念动效视频方案",
+        "family": "creative-direction",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "implementation",
+          "source_material"
+        ],
+        "negative_pattern": "设计概念动效"
+      }
+    ]
+  }
+}
