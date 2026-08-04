@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "recommended_threshold": 0.34,
+  "positive_concepts": {
+    "skill": ["skill", "技能"],
+    "source_material": ["workflow", "script", "prompt", "口播", "脚本", "文案", "产品说明", "观点"],
+    "authoring_action": ["turn", "create", "make", "generate", "制作", "生成", "做成", "封装", "修复"],
+    "deliverable": ["video", "视频", "概念动效", "解说视频"],
+    "implementation": ["Remotion", "HyperFrames", "timeline", "时间轴", "字幕", "配音", "cue"],
+    "quality_boundary": ["review", "审查", "渲染", "音画同步"]
+  },
+  "description_required_concepts": [
+    "skill",
+    "source_material",
+    "authoring_action"
+  ],
+  "negative_patterns": [
+    "只改写这篇文章",
+    "只改写文案",
+    "只做字幕",
+    "已有实拍素材",
+    "参考视频分析",
+    "只审查成片",
+    "只做成片审查",
+    "口播稿"
+  ],
+  "should_trigger": [
+    {
+      "text": "把这段口播脚本做成带配音、字幕和概念动效的解说视频",
+      "family": "core-production"
+    },
+    {
+      "text": "把这个观点工作流封装成脚本到概念动效视频的 Skill，并用音频 cue 驱动时间轴",
+      "family": "skill-authoring"
+    },
+    {
+      "text": "用 Remotion 根据配音实测时长生成 timeline.json、字幕和场景动画",
+      "family": "existing-project"
+    },
+    {
+      "text": "把这份产品说明制作成可观看的中文概念解说视频，最后交给 review Skill 检查",
+      "family": "handoff"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "只改写这篇文章的口播文案，不做视频",
+      "family": "copy-only"
+    },
+    {
+      "text": "给已有实拍素材只做字幕，不改变画面",
+      "family": "caption-only"
+    },
+    {
+      "text": "做参考视频分析，拆解镜头和剪辑节奏",
+      "family": "reference-study"
+    },
+    {
+      "text": "只审查成片的字幕和画面问题，输出问题清单",
+      "family": "post-render-audit"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "分析这个已有 MP4 的视觉质量和音画同步",
+      "family": "post-render-audit"
+    },
+    {
+      "text": "把一段已有实拍素材剪成带字幕的短视频",
+      "family": "footage-editing"
+    },
+    {
+      "text": "把文章压缩成 60 秒口播稿",
+      "family": "script-rewrite"
+    }
+  ]
+}

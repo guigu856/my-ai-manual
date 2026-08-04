@@ -1,0 +1,59 @@
+interface:
+  display_name: "Script to Explainer Video"
+  short_description: "Turn spoken scripts into narrated concept-motion explainer videos with one audio-driven timeline"
+  default_prompt: "Use this skill to freeze the script, measure the voiceover, build segments.json and timeline.json, route the visual topology, render with Remotion or HyperFrames, validate captions, and prepare a handoff to explainer-video-review. Keep audio cue timing as the single clock and report missing runtime or human evidence explicitly."
+  examples:
+    - "把这段口播做成带配音、字幕和概念动效的解说视频"
+    - "用配音 cue 驱动 Remotion 的场景、字幕和转场"
+    - "把这个观点文案整理成 segments.json 和 timeline.json，再渲染成片"
+    - "按照音频主时钟修复这个概念动效视频工程"
+    - "把成片交给 explainer-video-review 做后渲染审查"
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "agent-skills-compatible"
+    - "vscode"
+  activation:
+    mode: "manual"
+    paths:
+      - "skills/script-to-explainer-video"
+  execution:
+    context: "inline"
+    shell: "powershell/bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow read-only source and catalog review; require explicit user input for external writes"
+    generated_public_claims: "evidence-bound"
+  permissions:
+    network: "source discovery, optional asset/license lookup, and explicitly configured providers"
+    file_write: "project working directory and target skill files only when requested"
+    subprocess: "Remotion, HyperFrames, FFmpeg, ffprobe, configured TTS, and bundled validation scripts"
+    interactive: "only for hard blockers or voice/render acceptance"
+  degradation:
+    openai: "canonical source"
+    claude: "canonical source plus minimal adapter"
+    generic: "canonical source"
+    agent-skills-compatible: "canonical source"
+    vscode: "canonical source plus interface metadata"
+gates:
+  scaffold:
+    - "frontmatter has name, description, and explicit exclusions"
+    - "README has natural-language triggers and a validation hook"
+    - "audio-clock and handoff boundaries are stated"
+  production:
+    - "input/output contract is present"
+    - "resources are routed by semantic topology"
+    - "trigger cases cover positive, negative, and near-neighbor requests"
+    - "timeline validator is runnable"
+    - "handoff to explainer-video-review is explicit"
+    - "runtime and human evidence claims are labeled"
+  library:
+    - "Skill IR and prior-art report are present"
+    - "platform and degradation metadata are present"
+    - "review cadence and owner are declared"
+  governed:
+    - "rollback, trust, secret, and publication boundaries are present"

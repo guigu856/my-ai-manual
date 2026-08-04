@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "status": "missing_evidence",
+  "cases": [
+    {
+      "id": "timeline-single-clock",
+      "prompt": "把一段口播脚本制作成由配音 cue 驱动的概念动效视频",
+      "input_files": ["segments.json", "timeline.json"],
+      "baseline_output": "missing_evidence: no provider-backed baseline captured",
+      "with_skill_output": "expected: one canonical timeline drives scene, caption, and transition timing",
+      "assertions": [
+        "timeline.json has fps, duration_frames, segments, and ordered cues",
+        "all cues are inside their parent segment",
+        "renderer and captions read the same timeline",
+        "no second absolute-time source is introduced"
+      ],
+      "human_notes": "Requires a real rendered project to validate audio, visual semantics, and playback sync."
+    },
+    {
+      "id": "review-handoff",
+      "prompt": "渲染成片后交给 explainer-video-review 做审查并修复",
+      "input_files": ["out/final.mp4", "timeline.json", "captions.srt"],
+      "baseline_output": "missing_evidence: no completed review record captured",
+      "with_skill_output": "expected: production handoff lists the MP4, frozen text, timeline, captions, and review status",
+      "assertions": [
+        "production-handoff.json names the current artifacts",
+        "review status is explicit",
+        "a fix triggers full rerender and a new review pass"
+      ],
+      "human_notes": "Visual quality and human review remain missing evidence until a real project is inspected."
+    }
+  ],
+  "missing_evidence": [
+    "provider-backed render run",
+    "real MP4 playback verification",
+    "human review with rubric and reviewer record"
+  ]
+}

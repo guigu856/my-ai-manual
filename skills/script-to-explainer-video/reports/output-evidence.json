@@ -1,0 +1,19 @@
+{
+  "evidence_kind": "recorded_fixture",
+  "ok": false,
+  "status": "missing_evidence",
+  "scope": "static package, trigger, timeline-validator, and unit-test checks",
+  "checks": {
+    "package_validation": "pass",
+    "trigger_eval": "11/11",
+    "timeline_valid_fixture": "pass",
+    "timeline_invalid_fixture_rejected": "pass",
+    "unit_tests": "2/2"
+  },
+  "missing_evidence": [
+    "provider-backed render run",
+    "real MP4 playback verification",
+    "human review with reviewer, rubric, and decision"
+  ],
+  "note": "Recorded fixtures and static checks are not provider-backed or human output evidence."
+}

@@ -1,0 +1,176 @@
+{
+  "ok": true,
+  "threshold": 0.34,
+  "description_concepts": [
+    "authoring_action",
+    "deliverable",
+    "implementation",
+    "quality_boundary",
+    "skill",
+    "source_material"
+  ],
+  "missing_description_concepts": [],
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "false_positive": 0,
+    "false_negative": 0,
+    "pass_rate": 1.0
+  },
+  "failures": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "把这段口播脚本做成带配音、字幕和概念动效的解说视频",
+        "family": "core-production",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.8,
+        "matched_concepts": [
+          "authoring_action",
+          "deliverable",
+          "implementation",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这个观点工作流封装成脚本到概念动效视频的 Skill，并用音频 cue 驱动时间轴",
+        "family": "skill-authoring",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "authoring_action",
+          "deliverable",
+          "implementation",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "用 Remotion 根据配音实测时长生成 timeline.json、字幕和场景动画",
+        "family": "existing-project",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "authoring_action",
+          "implementation"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这份产品说明制作成可观看的中文概念解说视频，最后交给 review Skill 检查",
+        "family": "handoff",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "authoring_action",
+          "deliverable",
+          "quality_boundary",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "只改写这篇文章的口播文案，不做视频",
+        "family": "copy-only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "deliverable",
+          "source_material"
+        ],
+        "negative_pattern": "只改写这篇文章"
+      },
+      {
+        "prompt": "给已有实拍素材只做字幕，不改变画面",
+        "family": "caption-only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "implementation"
+        ],
+        "negative_pattern": "只做字幕"
+      },
+      {
+        "prompt": "做参考视频分析，拆解镜头和剪辑节奏",
+        "family": "reference-study",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "deliverable"
+        ],
+        "negative_pattern": "参考视频分析"
+      },
+      {
+        "prompt": "只审查成片的字幕和画面问题，输出问题清单",
+        "family": "post-render-audit",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "implementation",
+          "quality_boundary"
+        ],
+        "negative_pattern": "只审查成片"
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "分析这个已有 MP4 的视觉质量和音画同步",
+        "family": "post-render-audit",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "quality_boundary"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把一段已有实拍素材剪成带字幕的短视频",
+        "family": "footage-editing",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "deliverable",
+          "implementation"
+        ],
+        "negative_pattern": "已有实拍素材"
+      },
+      {
+        "prompt": "把文章压缩成 60 秒口播稿",
+        "family": "script-rewrite",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "negative_pattern": "口播稿"
+      }
+    ]
+  }
+}

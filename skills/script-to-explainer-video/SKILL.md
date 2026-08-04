@@ -1,218 +1,137 @@
 ---
 name: script-to-explainer-video
-description: 把口播脚本/观点文案变成极简概念动效解说视频的完整生产线：先配音、以配音实测时长为全片主时钟，Remotion/HyperFrames 程序化概念动效，内[...]
-version: 1.2.1
+description: |
+  Use this Agent Skill when a user provides a workflow, script, prompt, oral script, or concept brief and asks to turn it into a narrated concept-motion explainer video. It covers script freezing, measured voiceover, a canonical timeline, Remotion or HyperFrames motion, captions, rendering, and production handoff. Trigger on requests such as “把这段口播做成概念动效视频” or “用配音驱动字幕和画面”。Exclude script-only rewriting, caption-only work, existing-footage editing, reference-video analysis, and post-render quality audits; route the last case to `explainer-video-review`.
+metadata:
+  author: guigu856
+  version: "1.3.0"
 ---
 
-# 脚本 → 概念动效视频生产线
+# 脚本 → 概念动效视频生产 Skill
 
-## 总原则
+## 职责边界
 
-**先声音，后画面。** 配音实际时长是全片唯一时间基准（音频主时钟）：视频帧号由音频时间轴推导，永远不反过来。
+本 Skill 负责：
 
-三条铁律：
+- 将口播脚本或观点文案冻结为可执行分段
+- 合成并验收配音，采集句级 cue
+- 生成以音频为主时钟的 `timeline.json`
+- 选择动效资源，完成场景设计与 Remotion / HyperFrames 实现
+- 生成字幕、渲染成片并完成生产前置检查
+- 将成片和证据交接给 `../explainer-video-review/SKILL.md`
 
-1. **音频驱动一切**：所有动效节拍、字幕帧、转场点都从主时间轴读取，禁止凭感觉写死秒数。
-2. **中央构图、无常驻**：主体概念居中呈现；不设全片常驻元素、不拉跨场长线。元素只在语义需要时作为场景内元素出现，该退就退。
-3. **不逐帧自检不交付**：全量接触表逐帧审查是强制步骤，不得用关键帧抽检代替，不得等用户发现问题。
+本 Skill 不负责：
 
-用户只给脚本、未指定参数时，按下方「情境参数判断依据」自行判断执行，不要反问。不随情境变化的：先声音后画面、交付可观看成片（不是方案��[...]
+- 只改写文章、标题或口播文案
+- 只给已有视频加字幕
+- 编辑已有实拍素材、参考视频学习或镜头拆解
+- 对最终 MP4 做独立的视觉质量审查
 
-## 情境参数判断依据（用户未指定时）
+成片审查发现问题后，回到源文件或时间轴修复，整片重新渲染，再交给审查 Skill 复检。
 
-| 参数 | 判断依据 | 未指定时的处理 |
-|------|----------|----------------|
-| 画布与比例 | 投放平台 | B站/YouTube/官网横屏 16:9；抖音/视频号/小红书竖屏 9:16；完全未说明默认横屏 |
-| 帧率 | 运动密度 | 默认 30fps |
-| 视觉风格 | 脚本气质 + 用户要求 | 技术观点类默认深色极简（深底+双语义色）；其他题材先定风格基调，原则同为克制、少色 |
-| 声线 | 用户指定优先，其次脚本气质 | 以试听验收为准 |
-| 分段 | 观点密度 | 每段一个完整观点，1–3 句，不预设段数 |
-| 元素/字号 | 画布短边等比 | 以手机小屏可读为准 |
-| 一切节拍类时间 | 配音 cue 实测 | 枚举间隔、标题时机、字幕停留全部读 cue，不写死秒数 |
+## 输入与输出
 
----
+输入：
 
-## 流程（7 步，顺序不可换）
+- 口播脚本、观点文案、产品说明或概念 brief
+- 用户指定的平台、比例、帧率、声线、视觉风格和交付格式
+- 已有 Remotion / HyperFrames 工程及其资源（若存在）
 
-### 步骤 1：冻结文稿 → 分段 + 文案强化
+输出：
 
-- 文稿按语义切分：每段 = 一个完整观点，1–3 句；段数由脚本长度与观点密度决定。写入 `segments.json`：id / chapter / title / text。
-- `title` 是画面唯一保留的核心标题：短点题词或模块名，不是句子（不超过 8 字，屏幕上不抢字幕、不折行）。
-- 分段时同步做文案强化：
-  - 抽象论断后必须跟「例如」+ 具体业务场景，形成「判断→例证」对仗。
-  - 段落按「观点→展开→收束」组织，保持口语化叙述流。
-- 文稿一旦冻结，后续字幕与画面内容以冻结稿为准，不得再改写。
+- 冻结后的 `segments.json`
+- 最终配音和句级 cue
+- `timeline.json`
+- 场景设计与动效实现
+- 字幕文件（SRT/VTT 或工程内字幕数据）
+- 可播放 MP4、渲染工程和生产交接信息
 
-### 步骤 2：配音合成与实测时长
+## 三条生产契约
 
-- 逐段合成配音，同时收集句级时间边界作为节拍 cue。
-- 声线以用户指定为准；未指定时按脚本气质选择，以试听验收为准。
-- 音色红线（对任何声线适用）：禁止机器人音、电流感、金属共振、甜腻声、客服腔、新闻腔、广告腔、低质量机械声。试听听到任何一项即重做。
-- 每段时长以实际测量为准。段间留约 0.3–0.5s 间隔（按语速与段落分界轻重调整）。
-- 拼接前将所有音频转为统一格式（单通道、统一采样率），首尾静音也要纳入。
-- 拼接后进行响度标准化处理，生成最终音频文件。
-- 禁止用正弦波、白噪声、低频脉冲、持续嗡鸣制造"科技感"背景声。BGM 仅在用户要求时添加，需先解决版权，混音以不压过人声为准。
+1. **音频是主时钟**：所有场景、动效、字幕和转场时机从实测音频 cue 推导。
+2. **时间轴只有一个来源**：Remotion、HyperFrames、字幕和检查流程都读取同一份 `timeline.json`。
+3. **交付必须有复检证据**：生产检查与成片审查是两个阶段；源文件修复后必须整片复渲。
 
-### 步骤 3：试听验收（信号级，通过才继续）
+## Router Rules
 
-- 每段时长与字数是否匹配（粗略比例约 字数 / 4.6），偏差明显则重合成。
-- 检查音量是否有削波现象。
-- 检查是否有异常长的静音段（段间正常间隔除外）。
-- 总时长核对：音频总时长与预期时间轴是否相符。
-- 这一步不过就等于在错误的时间轴上盖房子，必须先过。
+- Trigger when the request turns a script, workflow, prompt, oral script, or concept brief into a narrated concept-motion explainer video.
+- Require a production artifact, not script-only rewriting, caption-only work, existing-footage editing, reference-video analysis, or post-render auditing.
+- Route post-render visual, subtitle, spatial-continuity, or audio-sync review to `../explainer-video-review/SKILL.md`.
 
-### 步骤 4：主时间轴 timeline.json
+## Compact Workflow
 
-- 内容：画布参数、每段起止帧、句级 cue 帧号。
-- 之后 Remotion 动效、字幕、QC 全部以此文件为唯一时钟来源。
+1. Freeze intent, script segments, platform, aspect ratio, and delivery format.
+2. Produce and measure voiceover; record sentence-level cues.
+3. Generate and validate `segments.json`, `timeline.json`, and subtitle data.
+4. Route semantic concepts to motion resources and implement scenes in Remotion or HyperFrames.
+5. Render representative frames, run production preflight, render the complete MP4, and hand off evidence.
 
-### 步骤 5：概念动效（Remotion / HyperFrames）
+## Gate Ladder
 
-引擎选择：Remotion（程序化 TSX）或 HyperFrames 均可，按环境与既有工程判断；本生产线只要求具备「读 timeline.json 按帧驱动」的能力。
+- **Input gate**: intent, script, platform, and output format are known; unresolved conflicts are recorded.
+- **Audio gate**: voiceover is listenable and measured; cue boundaries are recorded.
+- **Timeline gate**: one canonical timeline passes structural validation.
+- **Render gate**: representative frames and the complete MP4 are rendered from that timeline.
+- **Review gate**: the companion review Skill receives the MP4, frozen sources, timeline, captions, and evidence bundle.
 
-**先设计后编码**：每个场景先写清关键状态链、完整运动路径、布局网格、安全区、标题区、字幕区、模块尺寸、元素间距、锚点位置，再写代码。
+## Output Contract
 
-### 动效类型资源路由
+- Return frozen `segments.json`, measured voiceover and cues, canonical `timeline.json`, captions, scene implementation, rendered MP4, and handoff evidence.
+- Mark provider-render, playback, and human-review results as `missing evidence` until they are actually observed.
+- When a review finds a source or cue defect, repair the source, rerender the whole video, and submit a new evidence bundle.
 
-SKILL.md 保留生产方法、时间轴契约、质量红线和交付流程；具体动效类型放在 `resources/` 中，作为可替换的视觉方案资源。根据脚本的语义拓扑选择资源[...]
+## 执行流程
 
-路由顺序：
+### 1. 冻结意图和文稿
 
-1. 先从脚本判断关系结构：线性链路、层级展开、循环反馈、对比映射或状态重组。
-2. 读取 `resources/motion-patterns/index.md`，选择匹配的类型资源。
-3. 读取对应资源文件中的节点模型、状态链、几何约束、节拍契约和验收清单。
-4. 将资源参数写入场景设计，再由 `timeline.json` 的 cue 帧驱动画面。
-5. 资源与脚本语义冲突时，以脚本和音频主时钟为准，将局部参数保留在对应场景中。
+确认核心观点、目标受众、平台、输出格式和视觉边界。按语义切分，每段表达一个完整观点，写入 `segments.json`。`title` 只保留短点题词或模块名，默认不超过 8 个汉字。
 
-当前已归档的类型：线性概念链路 / 关系重组 → `resources/motion-patterns/concept-chain.md`。
+用户未指定参数时，使用本 Skill 的默认值；只有缺少脚本、无法确定输入文件或渲染工程状态互相矛盾时才提出阻塞问题。
 
-结构与节拍：
+### 2. 合成并验收配音
 
-- 单 Composition，章节用序列交叠约 0.5s 溶解；跨章连续元素在两章同一坐标渲染同一姿态。
-- 动效节拍 = cue 帧号，从 timeline.json 读取。章内用相对节拍常量：某段文案变长时，只平移受影响章节，其余章内相对节拍不变。
+逐段合成配音，收集句级起止时间，统一音频格式并完成响度、削波、异常静音和总时长检查。试听通过后才建立画面时间轴。
 
-运动空间纪律（贯穿全程的硬性要求）：
+### 3. 建立主时间轴
 
-- 所有动画必须有准确的起点和最终落点，避免位置漂移、连线错位、元素覆盖、转场穿帮。
-- 整个变化过程都要有秩序：元素在出现、移动、重组、离开、转场的全过程中，都保持明确的锚点、轨迹、层级和关系。
-- 关键状态帧（still 抽检）只用于确认重要阶段的结构是否正确，不能代替对完整运动过程的设计和检查。
+按 [音频—时间轴契约](references/audio-timeline-contract.md) 生成 `timeline.json`。帧区间使用半开区间 `[start_frame, end_frame)`；所有 cue 必须落在所属段落内并保持顺序。
 
-构图与尺寸：
+### 4. 选择动效资源并设计场景
 
-- 主体居中；每章独立场景，切换时旧元素该退就退、该清就清，不累积。
-- 每个场景只保留完成当前观点表达所必需的核心元素；画面职责是表现概念之间的关系、结构变化和状态转换，叙述性内容全部由配音/字幕承担。
-- 元素尺寸"偏大不怕，偏小不行"：字号与元素尺寸按画布短边等比设定，最终以缩小到手机小屏仍可识别为准。
-- 画面空旷不靠加装饰解决，靠元素间有机组合与布局强化主题；复杂场景分阶段呈现，不全量堆叠。
+先判断脚本的语义拓扑，再读取 [动效资源索引](resources/motion-patterns/index.md)。有匹配资源时按资源契约执行；没有匹配资源时记录资源状态并做局部场景设计，不把临时方案伪装成已归档资源。场景先写状态链、布局、安全区、锚点和转场，再编码。
 
-视觉红线（全部为硬性要求）：
+### 5. 实现、渲染和生产检查
 
-- 禁 PPT 感、软件 UI 演示、大段文字朗读。
-- 概念元素用图标、形状、节点、路径、容器表达；UI 面板、功能按钮、列表容器和仅用文字加矩形外框的包装，统一归入软件界面表达。选定的动效资[...]
-- 画面文字只留：核心标题、短判断、必要模块名。删除一切栏目名、状态信息、编号、版本、数据、英文小字。
-- 禁止副文本小字复读字幕内容——语义叙述由字幕承担，节点只留图标+模块名。
-- 模块名与配音用词逐字对应（配音说"操作文件"，模块名不能写"文件"）。
-- 不用品牌 logo 充当通用概念图标，用中性通用图形。
-- 配色跟随风格设定，色彩总量克制：原则为底色 + 双语义色，不引入第三色除非语义必须。
-- 遮住文字后，观众仍应能大致看懂元素功能与关系。
+动效、字幕和转场从 `timeline.json` 读取。先渲染代表帧检查构图与文字，再完成整片渲染和音频合成。按 [字幕、质量与交接](references/subtitle-qc-and-handoff.md) 完成结构检查和交接准备。
 
-标题纪律：
+### 6. 交接与修复循环
 
-- 标题只在配音说到对应内容时出现——不提前剧透结论，不滞后，也不挂超过所属段落。
-- 标题与字幕不得同屏同义复读：字幕承担叙述整句，标题只留点题词/模块名。
-- 标题与其所属图形绑定为一组，同进同出。
+把 MP4、冻结文稿、音频、时间轴、字幕和检查结果交给 `explainer-video-review`。审查结果若包含问题，修复源文件或 cue 数据，整片重新渲染并再次交接；旧的成片证据不沿用到新版本。
 
-动效语义与枚举场景：
+## 默认参数
 
-- 动效必须承担概念解释：复杂度来自元素关系的变化，不是元素数量。
-- 枚举逐项跟随配音节奏出现，间隔以配音对应词所在 cue 的实际时间为准，"听到哪个、看到哪个"；禁止配音还没念完就全量铺完。
-- 枚举节点数量 = 文稿枚举数量，一个不多；配音未念出的概念不得混入同级枚举。
-- 枚举所有标注必须在该段配音结束前全部到位，不得缺项。
-- 长枚举优先串行"出现一个、讲完淡出一个"，不同屏堆满全部项。
-- 前后场景保持视觉连续性：原有元素通过拆分、移动、连接、重组推动观点发展。
+| 参数 | 默认值 | 覆盖条件 |
+|---|---|---|
+| 比例 | 未说明时 16:9 | 平台或用户指定竖屏时使用 9:16 |
+| 帧率 | 30fps | 已有工程或用户指定时跟随工程 |
+| 风格 | 技术观点默认深色极简、底色加双语义色 | 用户指定风格优先 |
+| 分段 | 每段一个完整观点，通常 1–3 句 | 由脚本密度和实际配音调整 |
+| 节拍 | 句级 cue | 所有时间相关动作均以实测 cue 为准 |
+| BGM | 用户明确要求后再加入 | 先确认来源和混音目标 |
 
-转场规则：
+## 资源与验证
 
-- 场景切换必须走元素重组（前场元素收缩/变形/飞出成为后场一部分），**禁止硬切**（全部元素同帧瞬变/瞬消）。
-- 多元素同时变化拆成 2–3 拍完成，不同帧突变。
-- 元素消失必须有过渡（收缩/淡出 ≥0.5s），禁止一帧之内从"满屏信息"变空白。
-- 转场起点 ≤ 配音新段落起点，不允许新段开讲 1s 后还停在上一段画面。
-- 先收旧元素再出新元素，过渡帧不允许新旧信息打架。
-- 结尾收束帧清空所有图形与字幕到纯背景；全片同一术语用词统一。
+- 生产规则：[意图与输入输出契约](references/intent-and-contract.md)
+- 时间轴：[音频—时间轴契约](references/audio-timeline-contract.md)
+- 视觉实现：[视觉与动效规则](references/visual-motion-rules.md)
+- 字幕与交接：[字幕、质量与交接](references/subtitle-qc-and-handoff.md)
+- 时间轴校验：`python scripts/validate_timeline.py --project <project-dir>`
+- 触发回归：`python scripts/trigger_eval.py . --cases evals/trigger_cases.json`
 
-两条语义线进入同一区域时共用同一直线：前者淡出时后者绘入，读作"状态转化"而非两条线打架。
+## 完成条件
 
-组件安全编码：
-
-- 进度线组件在进度接近 0 时应返回 null，否则圆头描边会渲染成鬼影。
-- 带 scale 入场的容器：父级 scale=0 时子元素 opacity 会提前显形，需要外层包淡入透明度。
-- 淡出时用乘法（1→0），不要用减法（1-x）造成前期恒 0。
-- SVG 局部连线如有负坐标，需要设置 overflow:visible 才能渲染。
-
-### 步骤 6：抽检 → 全渲 → 合成
-
-- 先渲几个代表帧确认构图与文字尺寸（快速验证，不代替步骤 7）。
-- 全片渲染完成后，将视频与音频合成。
-- 检查最终输出：视频帧数是否与时间轴一致，音频时长是否与视频匹配。
-
-### 步骤 7：逐帧全量自检（强制）→ 修复循环 → 交付
-
-- 逐帧播放或按需抽帧查看，检查：错位/越界/偏线、文字重叠/裁切、鬼影、子元素提前显形、连线打架、交叠期元素叠加、元素占比、字幕单行与截断[...]
-- 发现问题 → 修复 → 复渲 → 复检，循环到全量通过才算交付。
-- 交付时直接给出成片文件，不把"自己检查"的责任推给用户。
-
----
-
-## 字幕规范（8 条硬规则）
-
-1. 每条字幕**只允许一行**，不得出现两行。
-2. **句末无标点**：句号、问号、感叹号一律去掉。
-3. **无断层**：字幕连续覆盖全片，段间间隔也要有字幕覆盖；转场时字幕消失与新场景出现同帧完成，不留真空。
-4. **长度控制**：单条不超画布一行容量（不截断、不溢出），超出在逗号/顿号处切分到下一条。
-5. **句子完整**：一个完整意群不得截断到两条；双音节词不得跨条拆开（如"项目状态"必须完整落在同一行）。
-6. **字幕 = 配音逐字原文**：不得改写、不得加词。
-7. **时序**：字幕出现时间 = 句级 cue ±1 帧；字幕跟随配音精确切换，念完后停留不超过 1.5s。
-8. 全片标点统一；字幕组件留 maxWidth 兜底以防溢出。
-
----
-
-## 配音替换与声音克隆立场
-
-- 用户想要特定真人音色（如剪映/抖音爆款声线）：该类音色无公开 API，**走剪映 SRT round-trip**——导出句级 SRT → 用户在剪映导入并配音 → 提取最终�[...]
-- **未授权的真人声音克隆必须明确拒绝**（伦理红线），并给出上述合法替代路径。
-
----
-
-## 规则引用
-
-- 代码实现遵循 `rule/代码编写规范.md`：保持最终形态、模块边界、显式依赖与契约同步。
-- 文档与资源遵循 `rule/文档编写规范.md`：只保留最终规约、接口、任务与验收标准。
-- SKILL.md 负责生产方法与跨类型约束；具体动效类型放入 `resources/`。
-
-## Skill 包目录结构
-
-```
-skills/script-to-explainer-video/
-├── SKILL.md                         # 方法论、路由、时间轴契约、质量红线
-├── resources/
-│   └── motion-patterns/
-│       ├── index.md                 # 类型索引与选择规则
-│       └── concept-chain.md         # 线性概念链路 / 关系重组
-└── scripts/                         # 可执行辅助脚本；没有脚本时保持为空
-```
-
-仓库级规则位于 `rule/` 目录；Skill 包与项目工作目录分离。
-
-## 项目工作目录
-
-脚本项目自身的工作目录：
-
-```
-project/
-├── segments.json      # 冻结文稿分段
-├── timeline.json      # 音频主时钟
-├── audio/             # 配音文件
-├── remotion/src/      # Remotion 代码
-└── out/               # 成片 + SRT
-```
-
-```
+- `segments.json` 已冻结，字幕和画面没有脱离冻结稿
+- 配音通过信号级检查，句级 cue 已记录
+- `timeline.json` 通过结构校验，渲染时没有另造时间轴
+- 代表帧和整片均已渲染，音频、视频、字幕时长一致
+- 交接材料完整，审查 Skill 的结果已处理或明确标记为待处理
