@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "brief.schema.json",
+  "title": "Explainer Video Brief",
+  "type": "object",
+  "required": [
+    "project_id",
+    "core_claim",
+    "audience",
+    "current_belief",
+    "target_belief",
+    "platform",
+    "aspect_ratio"
+  ],
+  "properties": {
+    "project_id": {"type": "string", "minLength": 1},
+    "core_claim": {"type": "string", "minLength": 1},
+    "audience": {"type": "string", "minLength": 1},
+    "current_belief": {"type": "string"},
+    "target_belief": {"type": "string", "minLength": 1},
+    "belief_gap": {"type": "string"},
+    "emotional_shift": {"type": "string"},
+    "narrative_type": {
+      "type": "string",
+      "enum": [
+        "reframe",
+        "causal-explanation",
+        "mechanism",
+        "comparison",
+        "process",
+        "argument",
+        "list-with-thesis"
+      ]
+    },
+    "platform": {"type": "string"},
+    "aspect_ratio": {"type": "string", "enum": ["16:9", "9:16", "1:1", "4:5"]},
+    "target_duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "rewrite_mode": {"type": "string", "enum": ["verbatim", "light-edit", "allowed"]},
+    "tone": {"type": "string"},
+    "style_preset": {"type": "string"},
+    "voice_preference": {"type": "string"},
+    "brand": {
+      "type": "object",
+      "properties": {
+        "colors": {"type": "array", "items": {"type": "string"}},
+        "fonts": {"type": "array", "items": {"type": "string"}},
+        "logo": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "source_hash": {"type": "string"}
+  },
+  "additionalProperties": false
+}
