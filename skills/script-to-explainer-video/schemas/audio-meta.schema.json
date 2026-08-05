@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "audio-meta.schema.json",
+  "title": "Explainer Video Audio Metadata",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "audio_file",
+    "audio_hash",
+    "sample_rate",
+    "channels",
+    "duration_seconds",
+    "spoken_units"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "audio_file": {"type": "string", "minLength": 1},
+    "audio_hash": {"type": "string", "pattern": "^sha256:"},
+    "sample_rate": {"type": "integer", "minimum": 8000},
+    "channels": {"type": "integer", "minimum": 1, "maximum": 2},
+    "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "spoken_units": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "beat_id", "text", "start", "end"],
+        "properties": {
+          "id": {"type": "string"},
+          "beat_id": {"type": "string"},
+          "text": {"type": "string"},
+          "start": {"type": "number", "minimum": 0},
+          "end": {"type": "number", "exclusiveMinimum": 0},
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["text", "start", "end"],
+              "properties": {
+                "text": {"type": "string"},
+                "start": {"type": "number", "minimum": 0},
+                "end": {"type": "number", "exclusiveMinimum": 0}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "loudness_lufs": {"type": "number"},
+    "true_peak_db": {"type": "number"},
+    "generated_at": {"type": "string"},
+    "provider": {"type": "string"},
+    "voice_id": {"type": "string"}
+  },
+  "additionalProperties": false
+}
