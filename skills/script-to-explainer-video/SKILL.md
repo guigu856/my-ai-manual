@@ -34,14 +34,108 @@ version: 1.2.1
 
 ## 流程（7 步，顺序不可换）
 
-### 步骤 1：冻结文稿 → 分段 + 文案强化
+### 步骤 1：产出单文件脚本分析包（script-package.json）
 
-- 文稿按语义切分：每段 = 一个完整观点，1–3 句；段数由脚本长度与观点密度决定。写入 `segments.json`：id / chapter / title / text。
-- `title` 是画面唯一保留的核心标题：短点题词或模块名，不是句子（不超过 8 字，屏幕上不抢字幕、不折行）。
-- 分段时同步做文案强化：
-  - 抽象论断后必须跟「例如」+ 具体业务场景，形成「判断→例证」对仗。
-  - 段落按「观点→展开→收束」组织，保持口语化叙述流。
-- 文稿一旦冻结，后续字幕与画面内容以冻结稿为准，不得再改写。
+建议把步骤 1 明确为「产出一份可机器/人工消费的脚本分析拆解包（script-package.json）」，并把该包作为后续所有步骤的单一输入契约。
+
+为什么采用单文件？
+- 单一入口便于上传/下载、版本回退与 API 调用；也符合“一个包就是契约”的直觉。
+- 内部仍按逻辑分区（manifest、brief、sections、beats、narration、subtitles、visuals、shots、events、assets、timeline、qc），既保持原子语义又只有一个文件需要管理。
+
+规则：
+- 如果用户已经上传该包，先做结构与内容验证，并补齐缺项（见下文）。
+- 如果用户仅提供脚本（和可选参数），生产线自动/半自动生成该包并返回供用户审阅与确认。
+- timeline 在初始阶段为估算（mode="stub"），在配音合成并获得句级 cue 后，用实测 timeline 更新包中的 timeline 字段（增量覆盖）。
+
+单文件顶层结构（必有顶层键，内部可扩展）：
+- package_id
+- schema_version
+- source_script_hash
+- manifest (author, created_at, validated, etc.)
+- brief
+- sections
+- beats
+- narration (spoken_units)
+- subtitles
+- visuals
+- shots
+- events
+- audio_events
+- assets
+- timeline (mode: stub | audio)
+- qc
+
+最小示例（极简）:
+
+```json
+{
+  "package_id": "pkg-20260805-001",
+  "schema_version": "1.0.0",
+  "source_script_hash": "sha256:xxxxx",
+  "brief": {
+    "core_theme": "任务拆解比工具重要",
+    "platform": "douyin",
+    "aspect_ratio": "9:16",
+    "style": { "palette": ["#0B0B0B","#00AEEF","#FFB400"], "tone": "沉稳" }
+  },
+  "sections": [
+    { "id": "S1", "title": "引起注意", "beat_ids": ["B01","B02"] }
+  ],
+  "beats": [
+    { "id": "B01", "text": "大多数人认为自己不会用AI。", "role": "陈述", "est_duration": 2.0 },
+    { "id": "B02", "text": "他们把原因归结为工具掌握得不够多。", "role": "补充", "est_duration": 2.2 },
+    { "id": "B03", "text": "真正的问题可能是没有把任务表达清楚。", "role": "转折", "est_duration": 2.6 }
+  ],
+  "narration": [
+    { "id": "N1", "beat_id": "B01", "text": "大多数人认为自己不会用AI。", "pause_after": 0.3 }
+  ],
+  "subtitles": [
+    { "id": "SUB1", "narration_id": "N1", "text": "大多数人认为自己不会用AI。", "start_est": 0.0, "end_est": 2.0 }
+  ],
+  "visuals": [
+    { "beat_id": "B01", "strategy": "隐喻动画", "concept": "桌面堆满工具，进度 0%" }
+  ],
+  "timeline": {
+    "mode": "stub",
+    "audio_total_est": 7.0,
+    "beats": [
+      { "beat_id": "B01", "start": 0.0, "end": 2.0 },
+      { "beat_id": "B02", "start": 2.3, "end": 4.5 },
+      { "beat_id": "B03", "start": 4.8, "end": 7.4 }
+    ]
+  },
+  "assets": [
+    { "id": "icon-tool", "type": "svg", "desc": "通用工具图标" }
+  ],
+  "qc": {
+    "subtitle_single_line": true,
+    "no_sentence_punctuation": true
+  }
+}
+```
+
+包验证与缺项补齐策略（用户上传包时）：
+1. 验证：检测顶层必备字段（package_id、schema_version、brief、beats、narration），并检查 beats 是否覆盖全文语义。
+2. 自动补齐（仅做建议，须人工复核）：
+   - timeline 缺失：按字数/估速生成 timeline.stub（中文常用：字数 / 4.6 ≈ 秒）。
+   - beats 缺 relation_to_previous：基于连接词标注为“待确认”。
+   - subtitles 缺 start/end：按所属 narration 的 est_start/est_end 填充占位时间。
+   - visuals 缺 strategy：基于关键词和 narrative_role 推荐策略并标注“建议”。
+   - assets 缺必要素材：在 assets 中写入占位请求。
+3. 报告：生成 validation_report，列出自动填充项与必须人工确认项。
+
+timeline 替换流程（单文件场景）：
+- 初始状态：timeline.mode = "stub"。
+- 配音合成并提取句级 cue 后，音频合成器把实测 timeline 写回 package.timeline（mode = "audio"），并在 manifest 中记录 last_audio_hash 与 updated_at。所有后续的 Remotion/HyperFrames 渲染从 package.timeline 导出 timeline.json 作为唯一主时钟。
+
+并行编辑与版本管理建议：
+- 虽然是单文件，仍推荐使用分支/PR 流程；manifest 中可加入 "locks" 或 "editing" 字段指示谁在处理哪个轨道（可选）。
+- 提供一个小型 CLI 校验工具（后续加入 repo）用于检查 schema、必填项与 qc 规则。
+
+向下游（步骤 2..7）的契约：
+- 所有后续步骤必须以该 package 的 timeline（当 mode="audio" 时为准）为唯一时间基准。渲染引擎/字幕工具/合成脚本应从 package 中抽取对应键并写入工作目录的 timeline.json（便于现有流水线兼容）。
+
+---
 
 ### 步骤 2：配音合成与实测时长
 
@@ -74,7 +168,7 @@ version: 1.2.1
 
 ### 动效类型资源路由
 
-SKILL.md 保留生产方法、时间轴契约、质量红线和交付流程；具体动效类型放在 `resources/` 中，作为可替换的视觉方案资源。根据脚本的语义拓扑选择资源[...]
+SKILL.md 保留生产方法、时间轴契约、质量红线和交付流程；具体动效类型放在 `resources/` 中，作为可替换的视觉方案资源。根据脚本的语义拓扑选择资源[...] 
 
 路由顺序：
 
@@ -110,7 +204,7 @@ SKILL.md 保留生产方法、时间轴契约、质量红线和交付流程；�
 - 概念元素用图标、形状、节点、路径、容器表达；UI 面板、功能按钮、列表容器和仅用文字加矩形外框的包装，统一归入软件界面表达。选定的动效资[...]
 - 画面文字只留：核心标题、短判断、必要模块名。删除一切栏目名、状态信息、编号、版本、数据、英文小字。
 - 禁止副文本小字复读字幕内容——语义叙述由字幕承担，节点只留图标+模块名。
-- 模块名与配音用词逐字对应（配音说"操作文件"，模块名不能写"文件"）。
+- 模块名与配音用词逐字对应（配音说"操作文件", 模块名不能写"文件"）。
 - 不用品牌 logo 充当通用概念图标，用中性通用图形。
 - 配色跟随风格设定，色彩总量克制：原则为底色 + 双语义色，不引入第三色除非语义必须。
 - 遮住文字后，观众仍应能大致看懂元素功能与关系。
