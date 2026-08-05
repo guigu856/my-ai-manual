@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "render-plan.schema.json",
+  "title": "Explainer Video Render Plan",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "storyboard_hash",
+    "audio_hash",
+    "canvas",
+    "fps",
+    "audio_file",
+    "scenes"
+  ],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "storyboard_hash": {"type": "string", "pattern": "^sha256:"},
+    "audio_hash": {"type": "string", "pattern": "^sha256:"},
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "fps": {"type": "number", "exclusiveMinimum": 0},
+    "audio_file": {"type": "string"},
+    "caption_file": {"type": "string"},
+    "engine": {"type": "string", "enum": ["remotion", "hyperframes"]},
+    "style_tokens": {"type": "object"},
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "beat_ids", "start_frame", "end_frame", "states", "events"],
+        "properties": {
+          "id": {"type": "string"},
+          "beat_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+          "start_frame": {"type": "integer", "minimum": 0},
+          "end_frame": {"type": "integer", "minimum": 1},
+          "visual_job": {"type": "string"},
+          "pattern": {"type": "string"},
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "meaning", "start_frame", "end_frame"],
+              "properties": {
+                "id": {"type": "string"},
+                "meaning": {"type": "string"},
+                "start_frame": {"type": "integer", "minimum": 0},
+                "end_frame": {"type": "integer", "minimum": 1},
+                "visible_elements": {"type": "array", "items": {"type": "string"}}
+              },
+              "additionalProperties": false
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "action", "cue_ref", "start_frame"],
+              "properties": {
+                "id": {"type": "string"},
+                "action": {"type": "string"},
+                "cue_ref": {"type": "string"},
+                "offset_frames": {"type": "integer"},
+                "start_frame": {"type": "integer", "minimum": 0},
+                "duration_frames": {"type": "integer", "minimum": 0},
+                "targets": {"type": "array", "items": {"type": "string"}}
+              },
+              "additionalProperties": false
+            }
+          },
+          "continuity": {"type": "object"},
+          "assets": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
