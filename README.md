@@ -1,6 +1,6 @@
 # My AI Manual
 
-用于集中管理 AI 辅助开发与知识视频生产相关的 Rules 和 Skills。
+用于集中管理 AI 辅助开发、知识视频生产与内容创作相关的 Rules 和 Skills。
 
 ## 目录结构
 
@@ -14,6 +14,12 @@ my-ai-manual/
 │   ├── 代码编写规范.md       # 代码的最终形态、边界与契约规范
 │   └── 文档编写规范.md       # 文档的最终形态与内容边界规范
 ├── skills/
+│   ├── idea-to-platform-content/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── writing-methodology.md
+│   │       ├── formats/
+│   │       └── platforms/
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
 │       ├── resources/
@@ -45,6 +51,15 @@ my-ai-manual/
 - 文档内容的最终形态规范
 
 ## Skills
+
+### `skills/idea-to-platform-content/`
+
+将想法、观点或初步文稿转化为指定平台、指定作品形态的可直接使用文稿 / 脚本。
+
+- `SKILL.md`：触发条件、核心工作流（确认平台与作品形态 → 提炼观点 → 结构推进 → 适配 → 自检）、路由与边界
+- `references/writing-methodology.md`：跨平台通用写作方法论（观点提炼、主线纪律、信息增量、自然度与去 AI 味、修改自检）
+- `references/formats/`：作品形态规范（口播短视频、非口播画面驱动视频、图文/知识卡/工具卡、推文/Thread、长文）
+- `references/platforms/`：平台约束（抖音、小红书、X/Twitter），易变参数标注为需刷新
 
 ### `skills/script-to-explainer-video/`
 
