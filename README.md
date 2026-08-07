@@ -4,15 +4,15 @@
 
 ## 目录结构
 
-```
+```text
 my-ai-manual/
 ├── rule/
-│   ├── 1.md                 # 基础行为准则
-│   ├── 2.md                 # 命名与文档规范
-│   ├── 3.md                 # 项目结构规范
-│   ├── 4.md                 # 代码逻辑与质量规范
-│   ├── 代码编写规范.md       # 代码的最终形态、边界与契约规范
-│   └── 文档编写规范.md       # 文档的最终形态与内容边界规范
+│   ├── 1.md
+│   ├── 2.md
+│   ├── 3.md
+│   ├── 4.md
+│   ├── 代码编写规范.md
+│   └── 文档编写规范.md
 ├── skills/
 │   ├── idea-to-platform-content/
 │   │   ├── SKILL.md
@@ -22,10 +22,33 @@ my-ai-manual/
 │   │       └── platforms/
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
+│       ├── DESIGN.md
+│       ├── references/
+│       │   ├── narrative-design.md
+│       │   ├── script-decomposition.md
+│       │   ├── visual-design-principles.md
+│       │   ├── storyboard-contract.md
+│       │   ├── audio-and-timing.md
+│       │   ├── caption-system.md
+│       │   ├── motion-language.md
+│       │   ├── engine-routing.md
+│       │   └── quality-gates.md
 │       ├── resources/
 │       │   └── motion-patterns/
 │       │       ├── index.md
-│       │       └── concept-chain.md
+│       │       ├── concept-chain.md
+│       │       ├── comparison.md
+│       │       ├── hierarchy.md
+│       │       ├── cycle-feedback.md
+│       │       └── state-transformation.md
+│       ├── schemas/
+│       │   ├── brief.schema.json
+│       │   ├── audio-meta.schema.json
+│       │   └── render-plan.schema.json
+│       ├── templates/
+│       │   ├── BRIEF.example.md
+│       │   ├── SCRIPT.example.md
+│       │   └── STORYBOARD.example.md
 │       └── scripts/
 └── README.md
 ```
@@ -63,26 +86,46 @@ my-ai-manual/
 
 ### `skills/script-to-explainer-video/`
 
-将口播脚本转换为概念动效解说视频。
+把观点、想法、讲解稿或口播脚本转换成概念动效讲解视频。
 
-- `SKILL.md`：生产方法、音频主时钟、字幕、空间结构、转场和质量验收
-- `resources/motion-patterns/index.md`：动效类型索引、选择规则和资源契约
-- `resources/motion-patterns/concept-chain.md`：线性概念链路与关系重组类型
-- `scripts/`：可执行辅助脚本
+该 Skill 使用渐进式加载：
 
-Skill 的通用方法和跨类型约束写入 `SKILL.md`，具体视觉类型写入 `resources/`。
+- `SKILL.md`：只保留入口、核心原则、阶段 Gate、失效规则和交付契约
+- `references/`：叙事、脚本、视觉、分镜、音频、字幕、动效、引擎和 QC 细则
+- `resources/motion-patterns/`：不同语义拓扑的可复用视觉状态模型
+- `schemas/`：机器可验证的阶段数据契约
+- `templates/`：BRIEF、SCRIPT 和 STORYBOARD 示例
+- `DESIGN.md`：维护者阅读的架构边界和扩展规则
+
+生产流程：
+
+```text
+BRIEF
+→ SCRIPT
+→ STORYBOARD
+→ FINAL AUDIO + CUES
+→ RENDER PLAN
+→ REMOTION / HYPERFRAMES
+→ QC
+→ FINAL MP4
+```
+
+最终音频只在叙事和分镜锁定后生成；通过音频验收后，实测 cue 才成为执行阶段唯一主时钟。
 
 ## 使用方式
 
-1. 根据任务加载对应的 Rule 文件。
-2. 根据任务类型加载对应的 Skill。
-3. 先读取 Skill 主文件，再读取匹配的资源文件。
-4. 按文件中的输入、流程、约束和验收标准执行。
-5. 交付前完成对应的结构检查、渲染检查和产物验证。
+1. 根据任务加载对应 Rule。
+2. 激活对应 Skill 并先读取 `SKILL.md`。
+3. 执行到具体阶段时，再读取该阶段的 reference、pattern、schema 或 template。
+4. 不把全部资料一次性塞入 Agent 上下文。
+5. 交付前完成叙事、时序、空间和技术四层验收。
 
 ## 内容维护
 
-- Rule 文件维护通用约束。
-- Skill 主文件维护生产方法和跨类型规则。
-- Resource 文件维护可替换的具体方案。
-- 项目输出文件保留在各自项目工作目录中。
+- Rule 维护跨 Skill 的通用约束。
+- Skill 主文件维护编排流程和不可违反的主契约。
+- Reference 维护单一领域知识，不跨文件重复全局规则。
+- Motion Pattern 只描述语义拓扑、状态链和局部风险，不承担字幕、音频或全局 QC。
+- Schema 维护机器数据结构。
+- Template 提供示例，不作为硬编码默认答案。
+- 项目输出文件保留在各自项目工作目录，不提交进 Skill 包。
