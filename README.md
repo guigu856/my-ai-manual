@@ -20,6 +20,12 @@ my-ai-manual/
 │   │       ├── writing-methodology.md
 │   │       ├── formats/
 │   │       └── platforms/
+│   ├── idea-to-x-content/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── value-diagnosis.md
+│   │       ├── format-routing.md
+│   │       └── human-writing.md
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
 │       ├── DESIGN.md
@@ -83,6 +89,15 @@ my-ai-manual/
 - `references/writing-methodology.md`：跨平台通用写作方法论（观点提炼、主线纪律、信息增量、自然度与去 AI 味、修改自检）
 - `references/formats/`：作品形态规范（口播短视频、非口播画面驱动视频、图文/知识卡/工具卡、推文/Thread、长文）
 - `references/platforms/`：平台约束（抖音、小红书、X/Twitter），易变参数标注为需刷新
+
+### `skills/idea-to-x-content/`
+
+将一个想法、观点、碎片化表达、文案或脚本转化为可直接发布到 X/Twitter 的高信息密度内容。
+
+- `SKILL.md`：观点还原 → 价值诊断 → 结构路由 → 主帖/回复展开 → 去 AI 味 → 发布前检查
+- `references/value-diagnosis.md`：判断观点是否具备非显而易见、纠偏、痛点、机制、边界或方法价值，并从原始表达中挖掘隐藏价值
+- `references/format-routing.md`：按内容结构与账号限制自适应选择单条、主帖+回复链、Thread、清单式推文或脚本拆解式 Thread
+- `references/human-writing.md`：保留作者语气，删除机械对仗、空洞拔高、无来源群体断言、强迫整齐和其它常见 AI 写作痕迹
 
 ### `skills/script-to-explainer-video/`
 
