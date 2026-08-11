@@ -35,6 +35,16 @@ my-ai-manual/
 │   │   ├── reports/
 │   │   ├── scripts/
 │   │   └── templates/
+│   ├── social-content-publisher/
+│   │   ├── SKILL.md
+│   │   ├── README.md
+│   │   ├── agents/
+│   │   ├── evals/
+│   │   ├── references/
+│   │   ├── reports/
+│   │   ├── scripts/
+│   │   ├── templates/
+│   │   └── tests/
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
 │       ├── DESIGN.md
@@ -118,6 +128,18 @@ my-ai-manual/
 - `evals/`：触发边界和输出评估规格
 - `reports/`：先例研究、Skill IR、触发报告和创建交接
 - `templates/`：工作简报示例
+
+### `skills/social-content-publisher/`
+
+把已经完成的图文或视频作品包发布到社交平台，并在提交后回读线上标题、正文和媒体，避免“命令成功、内容乱码”。
+
+- 已验证：小红书静态图文的登录校验、UTF-8 预检、发布、线上回读和原笔记修复
+- 已实现并完成提交前页面核验：抖音视频，支持标题、正文、标签、横版封面、竖版封面、定时和有头/无头模式；线上成品回读证据仍待补齐
+- 已预留：小红书视频、抖音图文、快手图文/视频、Bilibili、视频号和 YouTube
+- `scripts/preflight_manifest.py`：检查编码、CJK、媒体、封面、标题限制、秘密字段和重复发布意图
+- `scripts/publish_social.py`：小红书图文与抖音视频的 dry-run / 提交入口
+- `scripts/verify_xiaohongshu_note.py`：从管理页和编辑页回读小红书线上内容
+- `scripts/repair_xiaohongshu_note.py`：编辑原笔记并重新核验，不默认重复发布
 
 ### `skills/script-to-explainer-video/`
 

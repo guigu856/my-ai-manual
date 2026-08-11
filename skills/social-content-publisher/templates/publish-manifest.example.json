@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "platform": "xiaohongshu",
+  "content_type": "note",
+  "account": "main",
+  "expected_language": "zh-CN",
+  "title_file": "content/title.txt",
+  "body_file": "content/body.md",
+  "media": [
+    "output/xhs-01.png",
+    "output/xhs-02.png"
+  ],
+  "tags": [
+    "AI",
+    "人工智能"
+  ],
+  "schedule": null,
+  "visibility": "public",
+  "browser_mode": "headless",
+  "runtime": {
+    "sau_path": "sau"
+  },
+  "verification": {
+    "account_file": "runtime/cookies/xiaohongshu_main.json",
+    "browser_executable": "runtime/chrome.exe",
+    "match_title": null,
+    "manager_card_index": null
+  }
+}

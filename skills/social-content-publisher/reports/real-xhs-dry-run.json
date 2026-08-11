@@ -1,0 +1,43 @@
+{
+  "status": "preflight-passed",
+  "adapter": "xiaohongshu/note",
+  "platform": "xiaohongshu",
+  "content_type": "note",
+  "account": "main",
+  "publish_intent_id": "sha256:834656d8a70f7f7c03fadd6a956eac2e8002b836c83ddbe1dd4fddbf1a53bd97",
+  "title_chars": 19,
+  "title_cjk": 14,
+  "title_sha256": "2cbf4ba8543378ffc612490edf2dd746dd03db407e2a3958f70a448f2c9241fb",
+  "body_chars": 323,
+  "body_cjk": 230,
+  "body_sha256": "640dc7cbaea9634f0d8e8238830152fd43da53e29a6bbd5f8549b3c06a796d86",
+  "media_count": 9,
+  "media_sha256": [
+    "e28deca85ef869b4532f968d8cca57efbe49d251a9842bef5676036b9ece064d",
+    "b264fc4b320a5ef6684a8f755748d3959f0e8dd1dac48257b44f6133df3e6bf2",
+    "66c93ae3cd43dd9ea442d3430e90514b662acd8d868c2d8de4f3ebe923387e34",
+    "7e7c841bd8003a9af6450f27627333ca3e7b4e45e74f8f36840fcc2830fb9343",
+    "a2a4b19cd9c08f5896b34b0632ed9ae7c20221c5792f3e3fac08b3fa88dfac2e",
+    "c7ee89a67395523e0bb574c28625248bd8e8505a9069dd132a08c79fb49bfc15",
+    "1fd5907452f14bce33d9c08d62f281ee3130589c4717a64b00f4acc2fc7969ef",
+    "f1ac8a5f3753363ec279ded5786b229d804df6c7151585d73f03a9d85e8348cf",
+    "46a7af8ad0a033a26e2b1fd8942d1c91a5cd0bb1d8d904ddb67d54b38ba9d47f"
+  ],
+  "schedule": null,
+  "warnings": [],
+  "executor": "sau",
+  "command": [
+    "sau",
+    "xiaohongshu",
+    "upload-note",
+    "--account",
+    "main",
+    "--images",
+    "<9 ordered media files>",
+    "--title",
+    "<UTF-8 text chars=19 sha256=2cbf4ba85433>",
+    "--note",
+    "<UTF-8 text chars=323 sha256=640dc7cbaea9>"
+  ],
+  "dry_run": true
+}

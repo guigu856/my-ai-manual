@@ -1,0 +1,47 @@
+{
+  "name": "social-content-publisher",
+  "version": "0.2.0",
+  "owner": "guigu856",
+  "updated_at": "2026-08-12",
+  "status": "candidate",
+  "maturity_tier": "governed",
+  "lifecycle_stage": "public-pr",
+  "review_cadence": "quarterly",
+  "entrypoint": "SKILL.md",
+  "upstream_inspiration": "https://github.com/dreammis/social-auto-upload/tree/main/skills",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible"
+  ],
+  "validated_adapters": [
+    "xiaohongshu/note"
+  ],
+  "implemented_adapters": [
+    "douyin/video"
+  ],
+  "reserved_adapters": [
+    "xiaohongshu/video",
+    "douyin/note",
+    "kuaishou/note",
+    "kuaishou/video",
+    "bilibili/video",
+    "tencent/note",
+    "tencent/video",
+    "youtube/video"
+  ],
+  "release_gates": [
+    "target_and_authorization_contract",
+    "strict_utf8_cjk_preflight",
+    "media_signature_and_order",
+    "duplicate_publish_intent",
+    "online_round_trip",
+    "secret_scan",
+    "trigger_eval",
+    "root_entrypoint_isolation",
+    "prior_art_research",
+    "skill_ir",
+    "feature_branch_pr"
+  ]
+}

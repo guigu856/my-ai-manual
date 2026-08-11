@@ -1,0 +1,44 @@
+interface:
+  display_name: "社交内容自动发布"
+  short_description: "检查作品包与账号状态，安全发布多平台内容并核验线上结果"
+  default_prompt: "使用 $social-content-publisher 检查作品包、账号、编码、媒体和封面，先 dry-run，再按授权发布，并从平台管理页回读线上内容；小红书静态图文已验证，抖音视频已完成提交前页面核验但仍需最终线上回读，其它适配器保持 reserved。"
+  examples:
+    - "把这 9 张小红书卡片和正文发布到主账号，并核验有没有乱码"
+    - "先检查登录状态，再把视频定时发到抖音"
+    - "刚发的笔记标题变成问号了，修复原笔记"
+    - "把同一套成品发到多个平台，没接好的平台列出缺口"
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "agent-skills-compatible"
+  activation:
+    mode: "automatic"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "cross-platform; Windows UTF-8 files preferred"
+  trust:
+    source_tier: "local-or-user-supplied"
+    remote_inline_execution: "forbid"
+    generated_public_claims: "evidence-bound"
+  permissions:
+    network: "selected platform login, submit and online verification only"
+    file_write: "user task directory reports only; never persist secrets in the skill root"
+    subprocess: "selected adapter CLI, browser automation and bundled validation"
+    interactive: "login QR, missing target ambiguity and destructive follow-up actions"
+  degradation:
+    no_adapter: "return adapter-reserved with missing contract and evidence"
+    no_online_verifier: "return submitted-unverified, never published-verified"
+    no_auth: "return auth-required and display the current login artifact"
+gates:
+  required:
+    - "platform account package and schedule are unambiguous"
+    - "strict UTF-8 and CJK corruption preflight"
+    - "media and cover existence uniqueness signature and order"
+    - "dry-run before external submit"
+    - "duplicate publish intent check"
+    - "online title body and media round-trip"
+    - "secrets excluded from package logs and reports"
