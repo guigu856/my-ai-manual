@@ -19,6 +19,16 @@
         "列出分类 tid、登录、上传和线上核验所需证据",
         "不声称已经发布"
       ]
+    },
+    {
+      "id": "douyin-video-pre-submit",
+      "input": "把一个视频、横版封面和竖版封面发到抖音，先检查再提交。",
+      "assertions": [
+        "使用 douyin/video 适配器并校验单视频、标题、正文和双封面",
+        "dry-run 隐去标题正文全文但显示字符数、哈希、封面和发布设置",
+        "CLI 失效而 Edge 已登录时按浏览器接管流程处理文件权限",
+        "最终线上回读前只标记 submitted 或 pre-submit-validated，不标记 published-verified"
+      ]
     }
   ]
 }

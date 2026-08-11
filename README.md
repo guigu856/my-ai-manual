@@ -35,16 +35,16 @@ my-ai-manual/
 │   │   ├── reports/
 │   │   ├── scripts/
 │   │   └── templates/
-+│   ├── social-content-publisher/
-+│   │   ├── SKILL.md
-+│   │   ├── README.md
-+│   │   ├── agents/
-+│   │   ├── evals/
-+│   │   ├── references/
-+│   │   ├── reports/
-+│   │   ├── scripts/
-+│   │   ├── templates/
-+│   │   └── tests/
+│   ├── social-content-publisher/
+│   │   ├── SKILL.md
+│   │   ├── README.md
+│   │   ├── agents/
+│   │   ├── evals/
+│   │   ├── references/
+│   │   ├── reports/
+│   │   ├── scripts/
+│   │   ├── templates/
+│   │   └── tests/
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
 │       ├── DESIGN.md
@@ -59,22 +59,22 @@ my-ai-manual/
 │       │   ├── engine-routing.md
 │       │   └── quality-gates.md
 │       ├── resources/
-│       │     
-│       │   
-│       │   
-│       │       
-│       │       
-│       │       
-│       │       
-│       │       
+│       │   └── motion-patterns/
+│       │       ├── index.md
+│       │       ├── concept-chain.md
+│       │       ├── comparison.md
+│       │       ├── hierarchy.md
+│       │       ├── cycle-feedback.md
+│       │       └── state-transformation.md
 │       ├── schemas/
 │       │   ├── brief.schema.json
 │       │   ├── audio-meta.schema.json
-│       │   
+│       │   └── render-plan.schema.json
 │       ├── templates/
-│       │   
-│       │   
-│       
+│       │   ├── BRIEF.example.md
+│       │   ├── SCRIPT.example.md
+│       │   └── STORYBOARD.example.md
+│       └── scripts/
 └── README.md
 ```
 
@@ -133,16 +133,19 @@ my-ai-manual/
 
 把已经完成的图文或视频作品包发布到社交平台，并在提交后回读线上标题、正文和媒体，避免“命令成功、内容乱码”。
 
-- 当前已验证：小红书静态图文的登录校验、UTF-8 预检、发布、线上回读和原笔记修复
-- 当前已预留：小红书视频、抖音图文 / 视频、快手图文 / 视频、Bilibili 视频、视频号和 YouTube。
-- `scripts/preflight_manifest.py`：检查编码、CJK、媒体、标题限制、秘密字段和重复发布意图
-- `scripts/publish_social.py`：dry-run 与提交入口；中文通过 UTF-8 文件和 Python 参数列表传递
-- `scripts/verify_xiaohongshu_note.py`：从管理页和编辑页回读线上内容
+- 已验证：小红书静态图文的登录校验、UTF-8 预检、发布、线上回读和原笔记修复
+- 已实现并完成提交前页面核验：抖音视频，支持标题、正文、标签、横版封面、竖版封面、定时和有头/无头模式；线上成品回读证据仍待补齐
+- 已预留：小红书视频、抖音图文、快手图文/视频、Bilibili、视频号和 YouTube
+- `scripts/preflight_manifest.py`：检查编码、CJK、媒体、封面、标题限制、秘密字段和重复发布意图
+- `scripts/publish_social.py`：小红书图文与抖音视频的 dry-run / 提交入口
+- `scripts/verify_xiaohongshu_note.py`：从管理页和编辑页回读小红书线上内容
 - `scripts/repair_xiaohongshu_note.py`：编辑原笔记并重新核验，不默认重复发布
 
 ### `skills/script-to-explainer-video/`
 
 把观点、想法、讲解稿或口播脚本转换成概念动效讲解视频。
+
+该 Skill 使用渐进式加载：
 
 - `SKILL.md`：只保留入口、核心原则、阶段 Gate、失效规则和交付契约
 - `references/`：叙事、脚本、视觉、分镜、音频、字幕、动效、引擎和 QC 细则
@@ -183,4 +186,3 @@ BRIEF
 - Schema 维护机器数据结构。
 - Template 提供示例，不作为硬编码默认答案。
 - 项目输出文件保留在各自项目工作目录，不提交进 Skill 包。
-

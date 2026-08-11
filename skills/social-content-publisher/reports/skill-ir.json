@@ -1,9 +1,9 @@
 {
   "schema_version": "2.0.0-qiaomu-lite",
-  "generated_at": "2026-08-11",
+  "generated_at": "2026-08-12",
   "package": {
     "name": "social-content-publisher",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "owner": "guigu856",
     "maturity_tier": "governed",
     "lifecycle_stage": "public-pr",
@@ -49,6 +49,7 @@
   "resources": {
     "references": [
       "references\\adapter-contract.md",
+      "references\\douyin-video.md",
       "references\\failure-recovery.md",
       "references\\platform-adapters.md",
       "references\\security-and-side-effects.md",
@@ -68,6 +69,7 @@
     ],
     "reports": [
       "reports\\creation-handoff.md",
+      "reports\\douyin-browser-flow-evidence.md",
       "reports\\prior-art-research.md",
       "reports\\real-xhs-dry-run.json",
       "reports\\real-xhs-preflight.json",

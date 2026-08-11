@@ -1,8 +1,8 @@
 {
   "name": "social-content-publisher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "owner": "guigu856",
-  "updated_at": "2026-08-11",
+  "updated_at": "2026-08-12",
   "status": "candidate",
   "maturity_tier": "governed",
   "lifecycle_stage": "public-pr",
@@ -18,10 +18,12 @@
   "validated_adapters": [
     "xiaohongshu/note"
   ],
+  "implemented_adapters": [
+    "douyin/video"
+  ],
   "reserved_adapters": [
     "xiaohongshu/video",
     "douyin/note",
-    "douyin/video",
     "kuaishou/note",
     "kuaishou/video",
     "bilibili/video",

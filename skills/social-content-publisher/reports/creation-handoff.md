@@ -2,14 +2,14 @@
 
 ## Result
 
-- Skill: `social-content-publisher` 0.1.0
+- Skill: `social-content-publisher` 0.2.0
 - Job: publish completed social media packages and verify the online result.
-- Current evidence: Xiaohongshu static note only.
+- Current evidence: Xiaohongshu static note is end-to-end validated; Douyin video is implemented and pre-submit UI validated, with final submit and online round-trip still pending.
 
 ## Reference skills studied
 
 - `xiaohongshu-upload`: CLI-first auth and upload contract; extended with round-trip verification.
-- `douyin-upload`: note / video metadata split; mapped into reserved adapter fields.
+- `douyin-upload`: video `title + desc + tags` and dual-cover command mapping; promoted to an implemented adapter after real pre-submit UI validation.
 - `kuaishou-upload`: unique ordered images; promoted into common preflight.
 - `bilibili-upload`: category and interactive login boundaries; kept adapter-specific.
 
@@ -31,8 +31,8 @@ All candidates came from `dreammis/social-auto-upload@008e4ff6`; public rating e
 
 ## Verification and limits
 
-- Unit tests cover UTF-8 preflight, title truncation, reserved adapters and redacted dry-run summaries.
+- Unit tests cover UTF-8 preflight, platform limits, media and cover signatures, reserved adapters, Douyin command mapping and redacted dry-run summaries.
 - Trigger cases cover publish, verify, repair, near-neighbor production and non-publishing requests.
 - Local Xiaohongshu publish and repair evidence exists from 2026-08-11.
 - Douyin, Kuaishou, Bilibili, Tencent and YouTube remain `missing evidence`.
-- Deletion automation is deliberately excluded from 0.1.0.
+- Deletion automation is deliberately excluded from 0.2.0.

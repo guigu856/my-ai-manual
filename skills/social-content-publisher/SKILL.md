@@ -1,8 +1,8 @@
 ---
 name: social-content-publisher
-description: 自动发布已经准备好的社交媒体作品包：检查媒体、标题、正文、账号与发布时间，完成登录或 Cookie 校验，选择平台与作品形态适配器，提交发布，并回读线上标题、正文和媒体数量确认内容没有乱码、截断或错发。Use whenever the user asks to 发布、上传、定时发布、批量分发、保存草稿、检查登录状态、修复已发布乱码，或把成品发到小红书、抖音、快手、Bilibili、视频号、YouTube 等平台。当前已端到端验证小红书静态图文；其他平台和作品形态按适配器契约扩展，未验证的适配器只生成执行计划，不声称已发布。不用于内容创作、卡图制作、视频剪辑、账号运营分析或只写文案。
+description: 自动发布已经准备好的社交媒体作品包：检查媒体、封面、标题、正文、账号与发布时间，完成登录或 Cookie 校验，选择平台与作品形态适配器，提交发布，并回读线上内容确认没有乱码、截断或错发。Use whenever the user asks to 发布、上传、定时发布、批量分发、保存草稿、检查登录状态、修复已发布乱码，或把成品发到小红书、抖音、快手、Bilibili、视频号、YouTube 等平台。当前已端到端验证小红书静态图文；抖音视频已实现 CLI 适配器并完成提交前页面核验，但尚缺最终提交后的线上回读证据；其他作品形态按适配器契约扩展。不用于内容创作、卡图制作、视频剪辑、账号运营分析或只写文案。
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
   owner: guigu856
 ---
 
@@ -31,7 +31,8 @@ metadata:
 |---|---|---|---|
 | 小红书 | 静态图文 | `validated` | `scripts/publish_social.py` |
 | 小红书 | 视频 | `reserved` | 适配器位置已预留 |
-| 抖音 | 图文 / 视频 | `reserved` | 适配器位置已预留 |
+| 抖音 | 视频 | `pre-submit-validated` | `scripts/publish_social.py` |
+| 抖音 | 图文 | `reserved` | 适配器位置已预留 |
 | 快手 | 图文 / 视频 | `reserved` | 适配器位置已预留 |
 | Bilibili | 视频 | `reserved` | 适配器位置已预留 |
 | 视频号 | 图文 / 视频 | `reserved` | 适配器位置已预留 |
@@ -82,7 +83,7 @@ package-ready
 ```text
 platform / content_type / account
 title_file / body_file / media
-tags / schedule / browser_mode
+tags / covers / schedule / browser_mode
 verification / runtime
 ```
 
@@ -90,11 +91,12 @@ verification / runtime
 
 ### Gate 3：账号与运行环境预检
 
-1. 查找平台专用 CLI、连接器或 API；当前小红书图文优先使用已安装的 `sau`。
+1. 查找平台专用 CLI、连接器或 API；当前小红书图文与抖音视频优先使用已安装的 `sau`。
 2. 执行账号校验，例如：
 
    ```bash
    sau xiaohongshu check --account <account>
+   sau douyin check --account <account>
    ```
 
 3. 登录失效时执行登录流程。二维码必须直接显示给用户；若上游会删除临时二维码，先复制到稳定路径，再在正式回复中显示，并标注生成时间和有效期。
@@ -114,6 +116,7 @@ python scripts/preflight_manifest.py <publish-manifest.json> --json-out <preflig
 - 标题、正文或清单不是严格 UTF-8。
 - 中文作品的标题或正文没有 CJK 字符，却出现连续 `????`。
 - 媒体缺失、重复、不可读或扩展名不符合适配器。
+- 抖音视频不是单个可识别视频，或显式横版/竖版封面不是有效 PNG/JPEG。
 - 标题会被当前适配器静默截断。
 - 已存在同一 `publish_intent_id` 的 `published-verified` 报告，用户又没有明确要求重发。
 - 清单包含 Cookie、Token、密码或私钥。
@@ -138,7 +141,7 @@ python scripts/publish_social.py <publish-manifest.json>
 python scripts/publish_social.py <publish-manifest.json> --submit
 ```
 
-小红书图文适配器使用 Python `subprocess` 参数列表调用 `sau`，不经过 PowerShell 文本管道。平台返回成功后，状态先写为 `submitted`，等待 Gate 7。
+小红书图文和抖音视频适配器使用 Python `subprocess` 参数列表调用 `sau`，不经过 PowerShell 文本管道。抖音视频映射 `title + desc + tags`，并可分别传递横版、竖版封面。平台返回成功后，状态先写为 `submitted`，等待 Gate 7。
 
 ### Gate 7：线上回读核验
 
@@ -150,7 +153,7 @@ python scripts/publish_social.py <publish-manifest.json> --submit
 - 媒体数量与顺序一致
 - 发布时间 / 可见性与请求一致
 
-小红书静态图文读取 `references/xiaohongshu-note.md`，用管理页或编辑页回读。CLI 的 `publish/success` 只证明提交成功，不证明中文内容正确。
+小红书静态图文读取 `references/xiaohongshu-note.md`，抖音视频读取 `references/douyin-video.md`。CLI 的成功标记只证明提交成功，不证明中文内容、封面和可见性正确。
 
 通过后写 `published-verified` 报告。核验条件不足时写 `submitted-unverified`，明确缺少哪项证据。
 
@@ -194,6 +197,7 @@ python scripts/publish_social.py <publish-manifest.json> --submit
 |---|---|
 | 完整状态机、门禁和幂等策略 | `references/workflow-and-gates.md` |
 | 小红书图文执行与回读 | `references/xiaohongshu-note.md` |
+| 抖音视频执行、浏览器接管与证据边界 | `references/douyin-video.md` |
 | 其它平台 / 作品形态预留 | `references/platform-adapters.md` |
 | 新适配器接口 | `references/adapter-contract.md` |
 | 登录、乱码、浏览器和重复发布修复 | `references/failure-recovery.md` |

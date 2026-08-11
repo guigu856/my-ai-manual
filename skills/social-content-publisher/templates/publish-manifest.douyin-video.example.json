@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "platform": "douyin",
+  "content_type": "video",
+  "account": "main",
+  "expected_language": "zh-CN",
+  "title_file": "content/title.txt",
+  "body_file": "content/body.md",
+  "media": [
+    "output/video.mp4"
+  ],
+  "covers": {
+    "landscape": "output/cover-landscape.jpg",
+    "portrait": "output/cover-portrait.jpg"
+  },
+  "tags": [
+    "AI",
+    "人工智能"
+  ],
+  "schedule": null,
+  "visibility": "public",
+  "browser_mode": "headed",
+  "runtime": {
+    "sau_path": "sau"
+  },
+  "verification": {
+    "require_online_round_trip": true
+  }
+}

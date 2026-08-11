@@ -1,7 +1,7 @@
 interface:
   display_name: "社交内容自动发布"
   short_description: "检查作品包与账号状态，安全发布多平台内容并核验线上结果"
-  default_prompt: "使用 $social-content-publisher 检查作品包、账号、编码和媒体顺序，先 dry-run，再按授权发布，并从平台管理页回读标题、正文和媒体；当前只有小红书静态图文可标记为已验证，其它适配器必须保持 reserved。"
+  default_prompt: "使用 $social-content-publisher 检查作品包、账号、编码、媒体和封面，先 dry-run，再按授权发布，并从平台管理页回读线上内容；小红书静态图文已验证，抖音视频已完成提交前页面核验但仍需最终线上回读，其它适配器保持 reserved。"
   examples:
     - "把这 9 张小红书卡片和正文发布到主账号，并核验有没有乱码"
     - "先检查登录状态，再把视频定时发到抖音"
@@ -37,7 +37,7 @@ gates:
   required:
     - "platform account package and schedule are unambiguous"
     - "strict UTF-8 and CJK corruption preflight"
-    - "media existence uniqueness signature and order"
+    - "media and cover existence uniqueness signature and order"
     - "dry-run before external submit"
     - "duplicate publish intent check"
     - "online title body and media round-trip"

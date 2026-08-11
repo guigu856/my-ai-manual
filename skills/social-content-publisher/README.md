@@ -5,7 +5,8 @@
 ## 当前范围
 
 - 已验证：小红书静态图文的账号校验、UTF-8 预检、提交、管理页定位、编辑页回读和原笔记修复。
-- 已预留：小红书视频、抖音图文 / 视频、快手图文 / 视频、Bilibili 视频、视频号和 YouTube。
+- 已实现并完成提交前页面核验：抖音视频，含标题、正文、标签、横版/竖版封面和发布设置；最终提交后的线上回读证据仍待补齐。
+- 已预留：小红书视频、抖音图文、快手图文 / 视频、Bilibili 视频、视频号和 YouTube。
 - 预留适配器不会被标记为已支持，只有端到端证据齐全后才升级。
 
 ## 安装
@@ -21,7 +22,7 @@ python C:/Users/<you>/.codex/skills/.system/skill-installer/scripts/install-skil
 ## 前提
 
 - Python 3.10+
-- 小红书图文：已安装并可调用 `social-auto-upload` 的 `sau`
+- 小红书图文与抖音视频：已安装并可调用 `social-auto-upload` 的 `sau`
 - 线上自动回读：`patchright` 和可用的 Chromium / Chrome
 - 平台账号由本地执行器管理；Cookie、Token 和二维码不进入仓库
 
@@ -29,6 +30,7 @@ python C:/Users/<you>/.codex/skills/.system/skill-installer/scripts/install-skil
 
 - “把这 9 张小红书卡片和正文发布到主账号，并检查线上有没有乱码。”
 - “把这个视频发到抖音；当前没有适配器就只列出接入缺口。”
+- “把这个视频、横版封面和竖版封面发到抖音，先 dry-run 再提交。”
 - “刚才发布的标题变成问号了，修复原笔记，不要重复发一条。”
 - “先给我 dry-run，核对账号、媒体顺序和发布时间。”
 
@@ -95,4 +97,4 @@ python C:/Users/<you>/.codex/skills/qiaomu-meta-skill/scripts/validate_skill.py 
 
 ## 上游参考
 
-当前命令契约参考 `dreammis/social-auto-upload`：<https://github.com/dreammis/social-auto-upload/tree/main/skills>。本 Skill 额外增加 UTF-8 门禁、重复发布防护、线上回读和原作品修复；其它平台仍按证据标记为 `reserved`。
+当前命令契约参考 `dreammis/social-auto-upload`：<https://github.com/dreammis/social-auto-upload/tree/main/skills>，抖音适配器核验基线为提交 `008e4ff66abdf48eb1f4b999272ef979711af436`。本 Skill 额外增加 UTF-8 门禁、双封面校验、重复发布防护、线上回读和原作品修复。

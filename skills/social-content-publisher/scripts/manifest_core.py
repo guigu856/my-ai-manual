@@ -9,21 +9,12 @@ from typing import Any
 
 
 SCRIPT_INTERFACE = "internal-module"
-
-
-SECRET_KEYS = {
-    "api_key",
-    "apikey",
-    "cookie",
-    "cookies",
-    "password",
-    "private_key",
-    "secret",
-    "token",
-}
+SECRET_KEYS = {"api_key", "apikey", "cookie", "cookies", "password", "private_key", "secret", "token"}
 ALLOWED_SECRET_PATH_KEYS = {"account_file"}
 QUESTION_RUN = re.compile(r"\?{4,}")
 CJK = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
+IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
+VIDEO_SUFFIXES = {".mp4", ".mov", ".m4v", ".webm", ".avi"}
 
 
 class ManifestError(ValueError):
@@ -37,9 +28,11 @@ class PreparedManifest:
     title: str
     body: str
     media: tuple[Path, ...]
+    covers: dict[str, Path]
     title_sha256: str
     body_sha256: str
     media_sha256: tuple[str, ...]
+    cover_sha256: dict[str, str]
     publish_intent_id: str
     report: dict[str, Any]
 
@@ -115,6 +108,50 @@ def _require_string(data: dict[str, Any], key: str) -> str:
     return value.strip()
 
 
+def _validate_image(path: Path, label: str) -> None:
+    if path.suffix.lower() not in IMAGE_SUFFIXES:
+        raise ManifestError(f"{label} only accepts PNG/JPEG: {path}")
+    header = path.read_bytes()[:12]
+    valid = header.startswith(b"\x89PNG\r\n\x1a\n") if path.suffix.lower() == ".png" else header.startswith(b"\xff\xd8\xff")
+    if not valid:
+        raise ManifestError(f"{label} signature does not match extension: {path}")
+
+
+def _validate_video(path: Path) -> None:
+    suffix = path.suffix.lower()
+    if suffix not in VIDEO_SUFFIXES:
+        raise ManifestError(f"douyin/video unsupported video extension: {path}")
+    header = path.read_bytes()[:12]
+    valid = (
+        (suffix in {".mp4", ".mov", ".m4v"} and len(header) >= 8 and header[4:8] == b"ftyp")
+        or (suffix == ".webm" and header.startswith(b"\x1aE\xdf\xa3"))
+        or (suffix == ".avi" and header.startswith(b"RIFF") and header[8:12] == b"AVI ")
+    )
+    if not valid:
+        raise ManifestError(f"video signature does not match extension: {path}")
+
+
+def _resolve_covers(path: Path, data: dict[str, Any]) -> dict[str, Path]:
+    raw = data.get("covers", {})
+    if raw is None:
+        raw = {}
+    if not isinstance(raw, dict):
+        raise ManifestError("covers must be an object")
+    unknown = set(raw) - {"landscape", "portrait"}
+    if unknown:
+        raise ManifestError("unknown cover fields: " + ", ".join(sorted(unknown)))
+    result: dict[str, Path] = {}
+    for key, value in raw.items():
+        if not isinstance(value, str) or not value.strip():
+            raise ManifestError(f"covers.{key} must be a path string")
+        cover = resolve_path(path, value)
+        if not cover.is_file():
+            raise ManifestError(f"cover file does not exist: {cover}")
+        _validate_image(cover, f"covers.{key}")
+        result[key] = cover
+    return result
+
+
 def prepare_manifest(path_value: str | Path) -> PreparedManifest:
     path = Path(path_value).expanduser().resolve()
     data = load_utf8_json(path)
@@ -124,22 +161,17 @@ def prepare_manifest(path_value: str | Path) -> PreparedManifest:
     platform = _require_string(data, "platform").lower()
     content_type = _require_string(data, "content_type").lower()
     account = _require_string(data, "account")
-    title_file = resolve_path(path, _require_string(data, "title_file"))
-    body_file = resolve_path(path, _require_string(data, "body_file"))
-    title = read_utf8(title_file, "title")
-    body = read_utf8(body_file, "body")
+    title = read_utf8(resolve_path(path, _require_string(data, "title_file")), "title")
+    body = read_utf8(resolve_path(path, _require_string(data, "body_file")), "body")
 
     secret_findings = _scan_secret_keys(data)
     if secret_findings:
         raise ManifestError("secret-like fields are forbidden: " + ", ".join(secret_findings))
-
     if "\ufffd" in title or "\ufffd" in body:
         raise ManifestError("Unicode replacement character detected")
     if QUESTION_RUN.search(title) or QUESTION_RUN.search(body):
         raise ManifestError("suspicious run of question marks detected")
-
-    expected_language = str(data.get("expected_language", "zh-CN"))
-    if expected_language.lower().startswith("zh"):
+    if str(data.get("expected_language", "zh-CN")).lower().startswith("zh"):
         if count_cjk(title) == 0:
             raise ManifestError("Chinese title contains no CJK characters")
         if count_cjk(body) == 0:
@@ -163,35 +195,43 @@ def prepare_manifest(path_value: str | Path) -> PreparedManifest:
     tags = data.get("tags", [])
     if not isinstance(tags, list) or any(not isinstance(tag, str) for tag in tags):
         raise ManifestError("tags must be a list of strings")
+    covers = _resolve_covers(path, data)
 
     adapter = f"{platform}/{content_type}"
     warnings: list[str] = []
     status = "adapter-reserved"
     if adapter == "xiaohongshu/note":
         status = "preflight-passed"
+        if covers:
+            raise ManifestError("xiaohongshu/note does not use covers")
         if len(title) > 20:
             raise ManifestError("xiaohongshu/note title exceeds 20-character adapter safety limit")
         if len(media) > 18:
             raise ManifestError("xiaohongshu/note media count exceeds observed 18-image limit")
-        allowed = {".jpg", ".jpeg", ".png"}
-        invalid = [str(item) for item in media if item.suffix.lower() not in allowed]
-        if invalid:
-            raise ManifestError("xiaohongshu/note only accepts PNG/JPEG in this adapter: " + ", ".join(invalid))
-        unreadable: list[str] = []
         for item in media:
-            header = item.read_bytes()[:8]
-            if item.suffix.lower() == ".png" and header != b"\x89PNG\r\n\x1a\n":
-                unreadable.append(str(item))
-            if item.suffix.lower() in {".jpg", ".jpeg"} and not header.startswith(b"\xff\xd8\xff"):
-                unreadable.append(str(item))
-        if unreadable:
-            raise ManifestError("media signature does not match extension: " + ", ".join(unreadable))
+            _validate_image(item, "media")
+    elif adapter == "douyin/video":
+        status = "preflight-passed"
+        if len(media) != 1:
+            raise ManifestError("douyin/video requires exactly one video")
+        if len(title) > 30:
+            raise ManifestError("douyin/video title exceeds observed 30-character limit")
+        if len(body) > 1000:
+            raise ManifestError("douyin/video body exceeds observed 1000-character limit")
+        _validate_video(media[0])
+        missing_covers = [name for name in ("landscape", "portrait") if name not in covers]
+        if missing_covers:
+            warnings.append("missing explicit cover(s): " + ", ".join(missing_covers) + "; platform may auto-crop")
+        warnings.append("douyin/video is executor-ready and pre-submit UI validated; final online round-trip evidence is pending")
     else:
+        if covers:
+            warnings.append("cover fields are preserved but this adapter is reserved")
         warnings.append(f"adapter {adapter} is reserved and lacks local end-to-end evidence")
 
     title_hash = sha256_text(title)
     body_hash = sha256_text(body)
     media_hashes = tuple(sha256_file(item) for item in media)
+    cover_hashes = {key: sha256_file(value) for key, value in sorted(covers.items())}
     intent_payload = {
         "platform": platform,
         "content_type": content_type,
@@ -199,6 +239,7 @@ def prepare_manifest(path_value: str | Path) -> PreparedManifest:
         "title_sha256": title_hash,
         "body_sha256": body_hash,
         "media_sha256": media_hashes,
+        "cover_sha256": cover_hashes,
         "schedule": data.get("schedule"),
         "visibility": data.get("visibility", "public"),
     }
@@ -218,6 +259,8 @@ def prepare_manifest(path_value: str | Path) -> PreparedManifest:
         "body_sha256": body_hash,
         "media_count": len(media),
         "media_sha256": media_hashes,
+        "covers": sorted(covers),
+        "cover_sha256": cover_hashes,
         "schedule": data.get("schedule"),
         "warnings": warnings,
     }
@@ -227,9 +270,11 @@ def prepare_manifest(path_value: str | Path) -> PreparedManifest:
         title=title,
         body=body,
         media=tuple(media),
+        covers=covers,
         title_sha256=title_hash,
         body_sha256=body_hash,
         media_sha256=media_hashes,
+        cover_sha256=cover_hashes,
         publish_intent_id=intent_id,
         report=report,
     )

@@ -7,7 +7,7 @@
 | 小红书图文 | `xiaohongshu` | `note` | `sau xiaohongshu upload-note` | `validated` |
 | 小红书视频 | `xiaohongshu` | `video` | `sau xiaohongshu upload-video` | `reserved` |
 | 抖音图文 | `douyin` | `note` | `sau douyin upload-note` | `reserved` |
-| 抖音视频 | `douyin` | `video` | `sau douyin upload-video` | `reserved` |
+| 抖音视频 | `douyin` | `video` | `sau douyin upload-video` | `pre-submit-validated` |
 | 快手图文 | `kuaishou` | `note` | `sau kuaishou upload-note` | `reserved` |
 | 快手视频 | `kuaishou` | `video` | `sau kuaishou upload-video` | `reserved` |
 | Bilibili 视频 | `bilibili` | `video` | `sau bilibili upload-video` | `reserved` |
@@ -32,7 +32,7 @@ references/platforms/
 ├── xiaohongshu-note.md       # 当前实现由上级 reference 承载
 ├── xiaohongshu-video.md      # reserved
 ├── douyin-note.md            # reserved
-├── douyin-video.md           # reserved
+├── douyin-video.md           # implemented, pre-submit-validated
 ├── kuaishou-note.md          # reserved
 ├── kuaishou-video.md         # reserved
 ├── bilibili-video.md         # reserved
@@ -46,6 +46,6 @@ references/platforms/
 ## 当前已研究的上游 Skill
 
 - `xiaohongshu-upload`：保留 `login → check → upload` 命令主线；补上线上回读与乱码恢复。
-- `douyin-upload`：借鉴视频 / 图文的 `title + desc|note + tags` 字段分流；本地发布证据缺失。
+- `douyin-upload`：视频采用 `title + desc + tags`，并支持横版/竖版封面；已完成真实登录态下的上传、表单回读和封面检测，最终点击发布及线上成品回读证据尚待补齐。核验基线：`dreammis/social-auto-upload@008e4ff66abdf48eb1f4b999272ef979711af436`。
 - `kuaishou-upload`：借鉴图文多图片真实性约束；本地发布证据缺失。
 - `bilibili-upload`：借鉴分类 `tid` 必填和真实终端登录边界；本地发布证据缺失。
