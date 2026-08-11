@@ -1,0 +1,11 @@
+{
+  "package": "fixture:ai-whetstone-xhs",
+  "status": "pass",
+  "findings": [
+    {
+      "level": "PASS",
+      "code": "P16",
+      "message": "package structure and 9 PNG cards passed"
+    }
+  ]
+}

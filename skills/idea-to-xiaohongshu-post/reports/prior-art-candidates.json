@@ -1,0 +1,52 @@
+{
+  "researched_at": "2026-08-11",
+  "queries": [
+    "xiaohongshu carousel social cards",
+    "idea to rednote post"
+  ],
+  "catalog_status": {
+    "unified_runner": "failed on Windows because subprocess could not resolve npx without a file extension",
+    "skills_sh": "queried successfully through npx.cmd",
+    "skillsmp": "queried successfully through search_skillsmp.py",
+    "github": "canonical sources inspected"
+  },
+  "metric_semantics": {
+    "skills_sh_installs": "ecosystem install telemetry, not ratings or output quality",
+    "github_stars": "repository attention, not skill-specific correctness",
+    "rating_evidence": "unavailable"
+  },
+  "candidates": [
+    {
+      "name": "idea-to-platform-content",
+      "source": "https://github.com/guigu856/my-ai-manual/tree/main/skills/idea-to-platform-content",
+      "role": "local trust and source-fidelity anchor",
+      "skills_sh_installs": null,
+      "github_stars": null,
+      "license": "repository root license not declared"
+    },
+    {
+      "name": "guizang-social-card-skill",
+      "source": "https://github.com/op7418/guizang-social-card-skill",
+      "role": "popularity and deterministic visual-production anchor",
+      "skills_sh_installs": 4200,
+      "github_stars": 6200,
+      "license": "AGPL-3.0"
+    },
+    {
+      "name": "xhs-markdown-card-collab",
+      "source": "https://github.com/Sven-LI-sankyuu/presentation-skills/tree/main/xhs-markdown-card-collab",
+      "role": "browser-rendered Markdown-card specialist",
+      "skills_sh_installs": null,
+      "github_stars": 164,
+      "license": "verify in canonical repository before code reuse"
+    },
+    {
+      "name": "xhs-writer-skill",
+      "source": "https://github.com/JuneYaooo/xhs-writer-skill",
+      "role": "idea-to-complete-post-package specialist",
+      "skills_sh_installs": null,
+      "github_stars": 123,
+      "license": "Apache-2.0"
+    }
+  ]
+}

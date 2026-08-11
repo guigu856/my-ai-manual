@@ -1,0 +1,223 @@
+{
+  "ok": true,
+  "threshold": 0.34,
+  "description_concepts": [
+    "publishable",
+    "source_material",
+    "visual_post_action",
+    "xiaohongshu"
+  ],
+  "missing_description_concepts": [],
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "false_positive": 0,
+    "false_negative": 0,
+    "pass_rate": 1.0
+  },
+  "failures": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "把这个想法做成一套能直接发的小红书图文",
+        "family": "idea_to_publishable_carousel",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "publishable",
+          "source_material",
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这篇文章拆成八张小红书观点卡，标题正文一起给我",
+        "family": "article_to_viewpoint_cards",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "publishable",
+          "source_material",
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这段视频稿改成九张 3:4 小红书轮播图",
+        "family": "script_to_carousel",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.75,
+        "matched_concepts": [
+          "source_material",
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "给这个教程做一套小红书知识卡并生成发布文案",
+        "family": "tutorial_to_cards",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.75,
+        "matched_concepts": [
+          "source_material",
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "优化这套小红书卡片，修掉断词、空白和逻辑重复后重新导出",
+        "family": "improve_existing_package",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.5,
+        "matched_concepts": [
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Turn these notes into a publish-ready Rednote carousel with cover, cards, caption, hashtags and QA.",
+        "family": "en_notes_to_rednote",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "publishable",
+          "source_material",
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "把这段想法写成小红书文案，只要文字，不要出图",
+        "family": "copy_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.5,
+        "matched_concepts": [
+          "source_material",
+          "xiaohongshu"
+        ],
+        "negative_pattern": "不要出图"
+      },
+      {
+        "prompt": "给我做一张小红书封面，不需要内页",
+        "family": "single_cover",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这个视频剪成小红书成片",
+        "family": "video_production",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "帮我登录小红书，把这些图片自动发布出去",
+        "family": "publishing_automation",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "xiaohongshu"
+        ],
+        "negative_pattern": "自动发布"
+      },
+      {
+        "prompt": "分析这个小红书账号为什么没流量",
+        "family": "account_diagnosis",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Translate this article into Chinese.",
+        "family": "translation_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "negative_pattern": null
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "先判断这个选题更适合小红书图文还是视频，不要开始制作",
+        "family": "format_diagnosis_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.5,
+        "matched_concepts": [
+          "visual_post_action",
+          "xiaohongshu"
+        ],
+        "negative_pattern": "不要开始制作"
+      },
+      {
+        "prompt": "把这篇小红书正文改得更自然，不要调整作品形式",
+        "family": "copy_edit_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "研究一下最近小红书上大家怎么聊这个话题",
+        "family": "research_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.25,
+        "matched_concepts": [
+          "xiaohongshu"
+        ],
+        "negative_pattern": null
+      }
+    ]
+  }
+}

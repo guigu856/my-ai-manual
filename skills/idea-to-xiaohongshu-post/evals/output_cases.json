@@ -1,0 +1,36 @@
+{
+  "skill_name": "idea-to-xiaohongshu-post",
+  "status": "specification_only",
+  "evidence_boundary": "Provider-backed runs and human blind review are missing evidence.",
+  "cases": [
+    {
+      "id": "viewpoint_from_script",
+      "prompt": "把一篇关于 AI 工具思维和磨石思维的视频稿改成九张小红书观点图文，生成标题、正文、卡图、预览和 QA。",
+      "assertions": [
+        "保留原稿的主语、对象和核心对比",
+        "每页存在唯一职责和信息增量",
+        "输出 5-9 张 1080x1440 PNG",
+        "标题、卡图和正文承诺一致",
+        "存在 contact sheet 和 qa-report.md"
+      ]
+    },
+    {
+      "id": "tutorial_from_notes",
+      "prompt": "把这份本地调试笔记做成可直接发布的小红书教程卡片。",
+      "assertions": [
+        "区分前提、步骤、检查点和常见错误",
+        "没有编造运行结果",
+        "截图作为证据时保持可读",
+        "确定性包检查通过"
+      ]
+    },
+    {
+      "id": "boundary_copy_only",
+      "prompt": "只把这段话改成小红书正文，不要出图。",
+      "assertions": [
+        "不触发完整图文生产流程",
+        "路由到文稿 Skill"
+      ]
+    }
+  ]
+}

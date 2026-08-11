@@ -1,0 +1,136 @@
+{
+  "recommended_threshold": 0.34,
+  "description_required_concepts": [
+    "xiaohongshu",
+    "visual_post_action"
+  ],
+  "positive_concepts": {
+    "xiaohongshu": [
+      "小红书",
+      "xiaohongshu",
+      "xhs",
+      "rednote"
+    ],
+    "visual_post_action": [
+      "图文",
+      "轮播",
+      "卡片",
+      "知识卡",
+      "观点卡",
+      "大字报",
+      "组图",
+      "carousel",
+      "image post",
+      "cards",
+      "拆成",
+      "做成",
+      "生成",
+      "优化",
+      "重做"
+    ],
+    "publishable": [
+      "直接发",
+      "可发布",
+      "成品",
+      "publish-ready",
+      "ready to post",
+      "标题正文一起",
+      "封面正文一起"
+    ],
+    "source_material": [
+      "想法",
+      "观点",
+      "文章",
+      "脚本",
+      "视频稿",
+      "聊天记录",
+      "笔记",
+      "文案",
+      "idea",
+      "article",
+      "script",
+      "notes"
+    ]
+  },
+  "negative_patterns": [
+    "不要出图",
+    "只要文案",
+    "只写文案",
+    "只做封面",
+    "单张封面",
+    "自动发布",
+    "登录小红书",
+    "账号诊断",
+    "视频成片",
+    "不要生成图片",
+    "copy only",
+    "publish automatically",
+    "不要开始制作"
+  ],
+  "should_trigger": [
+    {
+      "text": "把这个想法做成一套能直接发的小红书图文",
+      "family": "idea_to_publishable_carousel"
+    },
+    {
+      "text": "把这篇文章拆成八张小红书观点卡，标题正文一起给我",
+      "family": "article_to_viewpoint_cards"
+    },
+    {
+      "text": "把这段视频稿改成九张 3:4 小红书轮播图",
+      "family": "script_to_carousel"
+    },
+    {
+      "text": "给这个教程做一套小红书知识卡并生成发布文案",
+      "family": "tutorial_to_cards"
+    },
+    {
+      "text": "优化这套小红书卡片，修掉断词、空白和逻辑重复后重新导出",
+      "family": "improve_existing_package"
+    },
+    {
+      "text": "Turn these notes into a publish-ready Rednote carousel with cover, cards, caption, hashtags and QA.",
+      "family": "en_notes_to_rednote"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "把这段想法写成小红书文案，只要文字，不要出图",
+      "family": "copy_only"
+    },
+    {
+      "text": "给我做一张小红书封面，不需要内页",
+      "family": "single_cover"
+    },
+    {
+      "text": "把这个视频剪成小红书成片",
+      "family": "video_production"
+    },
+    {
+      "text": "帮我登录小红书，把这些图片自动发布出去",
+      "family": "publishing_automation"
+    },
+    {
+      "text": "分析这个小红书账号为什么没流量",
+      "family": "account_diagnosis"
+    },
+    {
+      "text": "Translate this article into Chinese.",
+      "family": "translation_only"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "先判断这个选题更适合小红书图文还是视频，不要开始制作",
+      "family": "format_diagnosis_only"
+    },
+    {
+      "text": "把这篇小红书正文改得更自然，不要调整作品形式",
+      "family": "copy_edit_only"
+    },
+    {
+      "text": "研究一下最近小红书上大家怎么聊这个话题",
+      "family": "research_only"
+    }
+  ]
+}

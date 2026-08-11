@@ -1,0 +1,42 @@
+interface:
+  display_name: "Idea to Xiaohongshu Post"
+  short_description: "Turn ideas and source material into publish-ready Xiaohongshu image-post packages"
+  default_prompt: "Use $idea-to-xiaohongshu-post to preserve the source viewpoint, route the material into a suitable Xiaohongshu carousel structure, produce the cover, ordered 3:4 card images, title, body, hashtags, contact sheet and QA report, and mark the package publish-ready only after content, visual, mobile-readability and deterministic package checks pass. Do not use this skill for copy-only requests, video production, account analysis or automated publishing."
+  examples:
+    - "把这个想法做成一套能直接发的小红书图文"
+    - "把这篇文章拆成小红书观点卡，标题正文一起给我"
+    - "把这段视频稿改成九张 3:4 小红书轮播图"
+    - "优化这套小红书卡片并重新渲染"
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "agent-skills-compatible"
+  activation:
+    mode: "automatic"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "cross-platform"
+  trust:
+    source_tier: "local-or-user-supplied"
+    remote_inline_execution: "forbid"
+    generated_public_claims: "evidence-bound"
+  permissions:
+    network: "only for current fact verification or explicitly selected web assets"
+    file_write: "user task directory only; never write generated work into the skill root"
+    subprocess: "browser rendering and bundled deterministic validation only"
+    interactive: "ask only for missing information that changes the work structure or for the one-time asset route"
+  degradation:
+    no_renderer: "deliver work-brief.md, page-plan.md and post.md with status render-blocked"
+    no_image_generation: "use user assets, sourced assets with provenance, or functional typography"
+gates:
+  required:
+    - "source and viewpoint contract"
+    - "page-plan information increments"
+    - "title-card-body promise alignment"
+    - "mobile readability and full-size visual review"
+    - "deterministic package validation"
+    - "publish-ready claim only after all gates pass"
