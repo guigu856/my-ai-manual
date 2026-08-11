@@ -1,0 +1,125 @@
+{
+  "schema_version": "2.0.0-qiaomu-lite",
+  "generated_at": "2026-08-11",
+  "package": {
+    "name": "idea-to-xiaohongshu-post",
+    "version": "0.1.0",
+    "owner": "guigu856",
+    "maturity_tier": "production",
+    "lifecycle_stage": "public-pr",
+    "upstream_inspiration": "https://github.com/guigu856/my-ai-manual/tree/main/skills/idea-to-platform-content",
+    "upstream_sync": {}
+  },
+  "intent": {
+    "description": "把想法、观点、聊天记录、文章、脚本、笔记或已有文案转成可直接发布的小红书图文作品包，包括作品定位、3:4 多页卡图、封面、标题、正文、话题、预览和发布前质检。Whenever the user asks to 做小红书图文、轮播卡片、知识卡、观点卡、大字报、把文章或视频稿改成小红书组图、优化现有小红书图文，或要求“做完能直接发”，即使没有点名本 Skill，也使用本 Skill。不用于只写文案且明确不要出图、只做单张封面、视频成片制作、账号运营诊断、数据抓取或自动登录发布。",
+    "job_to_be_done": "把想法、观点、聊天记录、文章、脚本、笔记或已有文案转成可直接发布的小红书图文作品包，包括作品定位、3:4 多页卡图、封面、标题、正文、话题、预览和发布前质检。Whenever the user asks to 做小红书图文、轮播卡片、知识卡、观点卡、大字报、把文章或视频稿改成小红书组图、优化现有小红书图文，或要求“做完能直接发”，即使没有点名本 Skill，也使用本 Skill。不用于只写文案且明确不要出图、只做单张封面、视频成片制作、账号运营诊断、数据抓取或自动登录发布。",
+    "target_users": [
+      "Qiaomu operator"
+    ],
+    "inputs": [],
+    "outputs": [],
+    "exclusions": [],
+    "qiaomu_defaults": {}
+  },
+  "triggers": {
+    "should_trigger": [
+      "把这个想法做成一套能直接发的小红书图文",
+      "把这篇文章拆成八张小红书观点卡，标题正文一起给我",
+      "把这段视频稿改成九张 3:4 小红书轮播图",
+      "给这个教程做一套小红书知识卡并生成发布文案",
+      "优化这套小红书卡片，修掉断词、空白和逻辑重复后重新导出",
+      "Turn these notes into a publish-ready Rednote carousel with cover, cards, caption, hashtags and QA."
+    ],
+    "should_not_trigger": [
+      "把这段想法写成小红书文案，只要文字，不要出图",
+      "给我做一张小红书封面，不需要内页",
+      "把这个视频剪成小红书成片",
+      "帮我登录小红书，把这些图片自动发布出去",
+      "分析这个小红书账号为什么没流量",
+      "Translate this article into Chinese."
+    ],
+    "near_neighbor": [
+      "先判断这个选题更适合小红书图文还是视频，不要开始制作",
+      "把这篇小红书正文改得更自然，不要调整作品形式",
+      "研究一下最近小红书上大家怎么聊这个话题"
+    ]
+  },
+  "workflow": {
+    "router_rules": [],
+    "compact_workflow": [],
+    "gate_ladder": [],
+    "output_contract": []
+  },
+  "resources": {
+    "references": [
+      "references\\card-story-architecture.md",
+      "references\\content-routing.md",
+      "references\\production-and-rendering.md",
+      "references\\quality-gates.md"
+    ],
+    "scripts": [
+      "scripts\\validate_xhs_package.py"
+    ],
+    "evals": [
+      "evals\\output_cases.json",
+      "evals\\trigger_cases.json"
+    ],
+    "reports": [
+      "reports\\creation-handoff.md",
+      "reports\\prior-art-candidates.json",
+      "reports\\prior-art-research.md",
+      "reports\\real-package-validation.json",
+      "reports\\skill-ir.json",
+      "reports\\trigger-eval.json",
+      "reports\\validation.md"
+    ]
+  },
+  "portability": {
+    "canonical_format": "agent-skills",
+    "adapter_targets": [
+      "openai",
+      "claude",
+      "generic",
+      "agent-skills-compatible"
+    ],
+    "activation": {
+      "mode": "automatic",
+      "paths": []
+    },
+    "execution": {
+      "context": "inline",
+      "shell": "cross-platform"
+    },
+    "trust": {
+      "source_tier": "local-or-user-supplied",
+      "remote_inline_execution": "forbid",
+      "generated_public_claims": "evidence-bound"
+    },
+    "permissions": {
+      "network": "only for current fact verification or explicitly selected web assets",
+      "file_write": "user task directory only; never write generated work into the skill root",
+      "subprocess": "browser rendering and bundled deterministic validation only",
+      "interactive": "ask only for missing information that changes the work structure or for the one-time asset route"
+    },
+    "degradation": {
+      "no_renderer": "deliver work-brief.md, page-plan.md and post.md with status render-blocked",
+      "no_image_generation": "use user assets, sourced assets with provenance, or functional typography"
+    }
+  },
+  "gates": {
+    "required": [
+      "source and viewpoint contract",
+      "page-plan information increments",
+      "title-card-body promise alignment",
+      "mobile readability and full-size visual review",
+      "deterministic package validation",
+      "publish-ready claim only after all gates pass"
+    ]
+  },
+  "evidence_boundary": {
+    "generated_reports_are_evidence": true,
+    "planned_work_is_evidence": false,
+    "missing_external_or_human_evidence_label": "missing evidence",
+    "public_claim_policy": "claim only what local validation, install proof, human review, or provider-backed evidence actually supports"
+  }
+}

@@ -26,6 +26,15 @@ my-ai-manual/
 │   │       ├── value-diagnosis.md
 │   │       ├── format-routing.md
 │   │       └── human-writing.md
+│   ├── idea-to-xiaohongshu-post/
+│   │   ├── SKILL.md
+│   │   ├── README.md
+│   │   ├── agents/
+│   │   ├── evals/
+│   │   ├── references/
+│   │   ├── reports/
+│   │   ├── scripts/
+│   │   └── templates/
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
 │       ├── DESIGN.md
@@ -98,6 +107,17 @@ my-ai-manual/
 - `references/value-diagnosis.md`：判断观点是否具备非显而易见、纠偏、痛点、机制、边界或方法价值，并从原始表达中挖掘隐藏价值
 - `references/format-routing.md`：按内容结构与账号限制自适应选择单条、主帖+回复链、Thread、清单式推文或脚本拆解式 Thread
 - `references/human-writing.md`：保留作者语气，删除机械对仗、空洞拔高、无来源群体断言、强迫整齐和其它常见 AI 写作痕迹
+
+### `skills/idea-to-xiaohongshu-post/`
+
+把想法、观点、文章、脚本或已有文案转成可直接发布的小红书静态图文作品包。
+
+- `SKILL.md`：来源合同 → 内容路由 → 拆页 → 文案 → 视觉生产 → 渲染 → 发布门禁
+- `references/`：内容类型、卡片叙事、视觉渲染和质量门禁
+- `scripts/validate_xhs_package.py`：检查标题正文、卡图数量、连续命名、PNG 尺寸、预览和来源记录
+- `evals/`：触发边界和输出评估规格
+- `reports/`：先例研究、Skill IR、触发报告和创建交接
+- `templates/`：工作简报示例
 
 ### `skills/script-to-explainer-video/`
 

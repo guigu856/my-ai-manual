@@ -1,0 +1,29 @@
+{
+  "name": "idea-to-xiaohongshu-post",
+  "version": "0.1.0",
+  "owner": "guigu856",
+  "updated_at": "2026-08-11",
+  "status": "candidate",
+  "maturity_tier": "production",
+  "lifecycle_stage": "public-pr",
+  "review_cadence": "quarterly",
+  "upstream_inspiration": "https://github.com/guigu856/my-ai-manual/tree/main/skills/idea-to-platform-content",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible"
+  ],
+  "release_gates": [
+    "source_fidelity_contract",
+    "page_information_increment",
+    "title_card_body_alignment",
+    "mobile_readability_review",
+    "deterministic_package_validation",
+    "trigger_eval",
+    "root_entrypoint_isolation",
+    "prior_art_research",
+    "skill_ir",
+    "feature_branch_pr"
+  ]
+}
