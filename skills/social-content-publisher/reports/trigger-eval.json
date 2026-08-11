@@ -1,0 +1,161 @@
+{
+  "ok": true,
+  "threshold": 0.6,
+  "description_concepts": [
+    "platform",
+    "publish_action",
+    "verification"
+  ],
+  "missing_description_concepts": [],
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "false_positive": 0,
+    "false_negative": 0,
+    "pass_rate": 1.0
+  },
+  "failures": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "把这 9 张小红书卡片和 post.md 发布到我的主账号，并核验线上内容。",
+        "family": "xhs_note_publish_verify",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 1.0,
+        "matched_concepts": [
+          "platform",
+          "publish_action",
+          "verification"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "帮我检查抖音账号登录状态，然后把这个视频定时发布。",
+        "family": "douyin_scheduled_video",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.667,
+        "matched_concepts": [
+          "platform",
+          "publish_action"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "刚发的小红书标题变成问号乱码了，修复原笔记。",
+        "family": "xhs_repair",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.667,
+        "matched_concepts": [
+          "platform",
+          "verification"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把同一套成品分别发布到小红书、抖音和快手，未接好的平台先列阻塞项。",
+        "family": "multi_platform_distribution",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.667,
+        "matched_concepts": [
+          "platform",
+          "publish_action"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "验证刚才自动发布的正文、图片数量和可见性是否正确。",
+        "family": "post_publish_verify",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.667,
+        "matched_concepts": [
+          "publish_action",
+          "verification"
+        ],
+        "negative_pattern": null
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "把这个想法写成一篇小红书文案。",
+        "family": "copy_creation",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.333,
+        "matched_concepts": [
+          "platform"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "给这条视频做一个竖版封面。",
+        "family": "cover_creation",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "matched_concepts": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "分析我的小红书账号为什么没流量。",
+        "family": "account_analysis",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.333,
+        "matched_concepts": [
+          "platform"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "帮我剪辑这段口播视频。",
+        "family": "video_editing",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "matched_concepts": [],
+        "negative_pattern": null
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "先做一套小红书图文，完成后再帮我发布。",
+        "family": "production_then_publish",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.667,
+        "matched_concepts": [
+          "platform",
+          "publish_action"
+        ],
+        "negative_pattern": "先做一套"
+      },
+      {
+        "prompt": "我只想要发布命令模板，先别实际提交。",
+        "family": "dry_run_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.333,
+        "matched_concepts": [
+          "publish_action"
+        ],
+        "negative_pattern": null
+      }
+    ]
+  }
+}

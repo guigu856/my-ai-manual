@@ -1,0 +1,128 @@
+{
+  "schema_version": "2.0.0-qiaomu-lite",
+  "generated_at": "2026-08-11",
+  "package": {
+    "name": "social-content-publisher",
+    "version": "0.1.0",
+    "owner": "guigu856",
+    "maturity_tier": "governed",
+    "lifecycle_stage": "public-pr",
+    "upstream_inspiration": "https://github.com/dreammis/social-auto-upload/tree/main/skills",
+    "upstream_sync": {}
+  },
+  "intent": {
+    "description": "自动发布已经准备好的社交媒体作品包：检查媒体、标题、正文、账号与发布时间，完成登录或 Cookie 校验，选择平台与作品形态适配器，提交发布，并回读线上标题、正文和媒体数量确认内容没有乱码、截断或错发。Use whenever the user asks to 发布、上传、定时发布、批量分发、保存草稿、检查登录状态、修复已发布乱码，或把成品发到小红书、抖音、快手、Bilibili、视频号、YouTube 等平台。当前已端到端验证小红书静态图文；其他平台和作品形态按适配器契约扩展，未验证的适配器只生成执行计划，不声称已发布。不用于内容创作、卡图制作、视频剪辑、账号运营分析或只写文案。",
+    "job_to_be_done": "自动发布已经准备好的社交媒体作品包：检查媒体、标题、正文、账号与发布时间，完成登录或 Cookie 校验，选择平台与作品形态适配器，提交发布，并回读线上标题、正文和媒体数量确认内容没有乱码、截断或错发。Use whenever the user asks to 发布、上传、定时发布、批量分发、保存草稿、检查登录状态、修复已发布乱码，或把成品发到小红书、抖音、快手、Bilibili、视频号、YouTube 等平台。当前已端到端验证小红书静态图文；其他平台和作品形态按适配器契约扩展，未验证的适配器只生成执行计划，不声称已发布。不用于内容创作、卡图制作、视频剪辑、账号运营分析或只写文案。",
+    "target_users": [
+      "Qiaomu operator"
+    ],
+    "inputs": [],
+    "outputs": [],
+    "exclusions": [],
+    "qiaomu_defaults": {}
+  },
+  "triggers": {
+    "should_trigger": [
+      "把这 9 张小红书卡片和 post.md 发布到我的主账号，并核验线上内容。",
+      "帮我检查抖音账号登录状态，然后把这个视频定时发布。",
+      "刚发的小红书标题变成问号乱码了，修复原笔记。",
+      "把同一套成品分别发布到小红书、抖音和快手，未接好的平台先列阻塞项。",
+      "验证刚才自动发布的正文、图片数量和可见性是否正确。"
+    ],
+    "should_not_trigger": [
+      "把这个想法写成一篇小红书文案。",
+      "给这条视频做一个竖版封面。",
+      "分析我的小红书账号为什么没流量。",
+      "帮我剪辑这段口播视频。"
+    ],
+    "near_neighbor": [
+      "先做一套小红书图文，完成后再帮我发布。",
+      "我只想要发布命令模板，先别实际提交。"
+    ]
+  },
+  "workflow": {
+    "router_rules": [],
+    "compact_workflow": [],
+    "gate_ladder": [],
+    "output_contract": []
+  },
+  "resources": {
+    "references": [
+      "references\\adapter-contract.md",
+      "references\\failure-recovery.md",
+      "references\\platform-adapters.md",
+      "references\\security-and-side-effects.md",
+      "references\\workflow-and-gates.md",
+      "references\\xiaohongshu-note.md"
+    ],
+    "scripts": [
+      "scripts\\manifest_core.py",
+      "scripts\\preflight_manifest.py",
+      "scripts\\publish_social.py",
+      "scripts\\repair_xiaohongshu_note.py",
+      "scripts\\verify_xiaohongshu_note.py"
+    ],
+    "evals": [
+      "evals\\output_cases.json",
+      "evals\\trigger_cases.json"
+    ],
+    "reports": [
+      "reports\\creation-handoff.md",
+      "reports\\prior-art-research.md",
+      "reports\\real-xhs-dry-run.json",
+      "reports\\real-xhs-preflight.json",
+      "reports\\skill-ir.json",
+      "reports\\trigger-eval.json"
+    ]
+  },
+  "portability": {
+    "canonical_format": "agent-skills",
+    "adapter_targets": [
+      "openai",
+      "claude",
+      "generic",
+      "agent-skills-compatible"
+    ],
+    "activation": {
+      "mode": "automatic",
+      "paths": []
+    },
+    "execution": {
+      "context": "inline",
+      "shell": "cross-platform; Windows UTF-8 files preferred"
+    },
+    "trust": {
+      "source_tier": "local-or-user-supplied",
+      "remote_inline_execution": "forbid",
+      "generated_public_claims": "evidence-bound"
+    },
+    "permissions": {
+      "network": "selected platform login, submit and online verification only",
+      "file_write": "user task directory reports only; never persist secrets in the skill root",
+      "subprocess": "selected adapter CLI, browser automation and bundled validation",
+      "interactive": "login QR, missing target ambiguity and destructive follow-up actions"
+    },
+    "degradation": {
+      "no_adapter": "return adapter-reserved with missing contract and evidence",
+      "no_online_verifier": "return submitted-unverified, never published-verified",
+      "no_auth": "return auth-required and display the current login artifact"
+    }
+  },
+  "gates": {
+    "required": [
+      "platform account package and schedule are unambiguous",
+      "strict UTF-8 and CJK corruption preflight",
+      "media existence uniqueness signature and order",
+      "dry-run before external submit",
+      "duplicate publish intent check",
+      "online title body and media round-trip",
+      "secrets excluded from package logs and reports"
+    ]
+  },
+  "evidence_boundary": {
+    "generated_reports_are_evidence": true,
+    "planned_work_is_evidence": false,
+    "missing_external_or_human_evidence_label": "missing evidence",
+    "public_claim_policy": "claim only what local validation, install proof, human review, or provider-backed evidence actually supports"
+  }
+}

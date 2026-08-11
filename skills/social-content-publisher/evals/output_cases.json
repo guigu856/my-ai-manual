@@ -1,0 +1,24 @@
+{
+  "skill": "social-content-publisher",
+  "cases": [
+    {
+      "id": "utf8-corruption",
+      "input": "标题和正文已经在平台上变成连续问号，媒体正常。",
+      "assertions": [
+        "识别为 repair-required，而不是再次报告发布成功",
+        "定位到 UTF-8 传输链路并阻止连续问号",
+        "优先编辑原作品，不自动重复发布",
+        "修复后重新进入线上编辑页回读"
+      ]
+    },
+    {
+      "id": "reserved-adapter",
+      "input": "发布一个 Bilibili 视频，但当前环境没有本地端到端证据。",
+      "assertions": [
+        "状态为 adapter-reserved",
+        "列出分类 tid、登录、上传和线上核验所需证据",
+        "不声称已经发布"
+      ]
+    }
+  ]
+}

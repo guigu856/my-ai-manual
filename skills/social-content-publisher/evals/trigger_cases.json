@@ -1,0 +1,72 @@
+{
+  "recommended_threshold": 0.60,
+  "description_required_concepts": [
+    "publish_action"
+  ],
+  "positive_concepts": {
+    "publish_action": [
+      "发布",
+      "上传",
+      "定时发布",
+      "自动发布",
+      "批量分发",
+      "保存草稿",
+      "publish",
+      "upload",
+      "schedule"
+    ],
+    "platform": [
+      "小红书",
+      "抖音",
+      "快手",
+      "Bilibili",
+      "视频号",
+      "YouTube",
+      "xiaohongshu",
+      "douyin",
+      "kuaishou"
+    ],
+    "verification": [
+      "核验",
+      "验证",
+      "检查线上",
+      "乱码",
+      "修复原笔记",
+      "检查登录",
+      "回读",
+      "verify",
+      "repair"
+    ]
+  },
+  "negative_patterns": [
+    "只写文案",
+    "做成图文",
+    "生成卡片",
+    "制作视频",
+    "剪辑视频",
+    "只做封面",
+    "账号诊断",
+    "分析流量",
+    "不要发布",
+    "先别发布",
+    "先做一套",
+    "完成后再帮我发布"
+  ],
+  "should_trigger": [
+    {"text": "把这 9 张小红书卡片和 post.md 发布到我的主账号，并核验线上内容。", "family": "xhs_note_publish_verify"},
+    {"text": "帮我检查抖音账号登录状态，然后把这个视频定时发布。", "family": "douyin_scheduled_video"},
+    {"text": "刚发的小红书标题变成问号乱码了，修复原笔记。", "family": "xhs_repair"},
+    {"text": "把同一套成品分别发布到小红书、抖音和快手，未接好的平台先列阻塞项。", "family": "multi_platform_distribution"},
+    {"text": "验证刚才自动发布的正文、图片数量和可见性是否正确。", "family": "post_publish_verify"}
+  ],
+  "should_not_trigger": [
+    {"text": "把这个想法写成一篇小红书文案。", "family": "copy_creation"},
+    {"text": "给这条视频做一个竖版封面。", "family": "cover_creation"},
+    {"text": "分析我的小红书账号为什么没流量。", "family": "account_analysis"},
+    {"text": "帮我剪辑这段口播视频。", "family": "video_editing"}
+  ],
+  "near_neighbor": [
+    {"text": "先做一套小红书图文，完成后再帮我发布。", "family": "production_then_publish"},
+    {"text": "我只想要发布命令模板，先别实际提交。", "family": "dry_run_only"}
+  ]
+}
