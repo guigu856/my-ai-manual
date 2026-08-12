@@ -33,7 +33,7 @@
       ]
     },
     "platform": {"type": "string"},
-    "aspect_ratio": {"type": "string", "enum": ["16:9", "9:16", "1:1", "4:5"]},
+    "aspect_ratio": {"type": "string", "enum": ["7:5", "16:9", "9:16", "1:1", "4:5"]},
     "target_duration_seconds": {"type": "number", "exclusiveMinimum": 0},
     "rewrite_mode": {"type": "string", "enum": ["verbatim", "light-edit", "allowed"]},
     "tone": {"type": "string"},

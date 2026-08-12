@@ -1,6 +1,6 @@
 ---
 version: 1
-aspect_ratio: 9:16
+aspect_ratio: 7:5
 style_preset: minimal-editorial
 caption_style: phrase-highlight
 ---
