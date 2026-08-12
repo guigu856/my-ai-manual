@@ -9,6 +9,8 @@
 - 让阶段产物可独立审核、版本化和失效
 - 让 Remotion 与 HyperFrames 共用同一上游契约
 - 让动效 Pattern 表达语义结构，而不是视觉皮肤
+- 默认控制状态空间，让普通观点视频先获得稳定下限，再按解释需要增加连续结构
+- 让最终像素审查与程序检查分离，避免“工具通过”被误写成“成片通过”
 
 ## 分层
 
@@ -27,6 +29,14 @@
 ### Machine Contracts
 
 `schemas/` 描述可以被程序验证的数据。Markdown 产物负责人工可读创作决策，JSON 产物负责确定性执行。
+
+`render-plan.json` 是执行阶段唯一真源：音频 cue、背景 token、字幕外观、页面边角信息和复杂度预算都由它传入引擎。组件内出现第二套时间或样式即属于架构违约。
+
+### Production Profiles
+
+`page-isolated` 是 3 分钟内观点口播和知识讲解的默认剖面：一页一个判断，旧页状态退出，不保留内容对象。`continuous-diagram` 只用于跨场对象变换本身承担解释任务的场景，并限制为一个跨场锚点。
+
+剖面限制的是状态空间，不限制视觉质量。设计应集中在构图、层级、对比和信息出现顺序，而不是靠跨场残影与对象数量制造复杂感。
 
 ### Examples
 
@@ -78,8 +88,17 @@ QC Evidence
 - captions
 - render-plan
 - probes
+- pixel-audit
 
 Markdown 负责解释和审阅；JSON 负责时间、事件和渲染。
+
+## 验证层级
+
+1. `scripts/validate_project.py --project <project>`：渲染前检查单一真源、hash、背景一致性、页面边角、字幕外观、复杂度预算、跨场残留和时间轴。
+2. 引擎自身检查：语法、运行时、布局、运动和对比度。
+3. `scripts/validate_project.py --project <project> --final final.mp4`：读取最终媒体并要求 `qc/pixel-audit.json` 中四项最终像素审查均为 `PASS`。
+
+三层结论不得互相代替。
 
 ## 新增 Reference
 

@@ -2,6 +2,10 @@
 
 `STORYBOARD.md` 是叙事和渲染之间的创作契约。它描述画面要完成的理解任务和状态变化，不承担最终帧号。
 
+开始分 Scene 前先读取 `production-profiles.md`。3 分钟内观点口播和知识讲解默认使用 `page-isolated`；连续场景需要证明跨场对象的解释作用。
+
+`STORYBOARD.md` 顶层先锁定 `production_profile`、`color_mode`、`background_token`、字幕外观和 `page_chrome`，所有 Scene 继承这一组全局规则。
+
 ## Scene 与 Beat 的关系
 
 - 一个 Scene 可以承载多个连续 Beat
@@ -13,6 +17,9 @@
 
 ```yaml
 scene_id: S02
+background_token: background.system-lab.dark
+corner_label: 问题 · 复杂化
+page_number: 02 / 08
 beat_ids: [B02, B03]
 visual_job: reframe
 representation: diagram
@@ -24,6 +31,12 @@ preserve:
   - central_subject
 exit:
   - excess_tool_icons
+complexity:
+  focal_points: 1
+  content_groups: 3
+  simultaneous_text_blocks: 3
+  primary_motion_relations: 1
+persistent_elements: []
 risks:
   - 信息过密
   - 转折提前泄露
@@ -137,5 +150,9 @@ continuity:
 3. 起态和终态分别表达什么？
 4. 动画表达了哪种关系，而不只是“让元素动起来”？
 5. 删除这个 Scene 后会损失什么？
+6. 左上角分类标签、右上角页码和主标题是否齐全且职责不同？
+7. 背景 token 是否遵守全局视觉锁？
+8. 复杂度是否在预算内？若超限，为什么不能拆页？
+9. `page-isolated` 是否仍保留了上一页内容对象？
 
 无法回答的问题必须回到视觉策略重新设计。

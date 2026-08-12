@@ -52,6 +52,8 @@ my-ai-manual/
 │       │   ├── narrative-design.md
 │       │   ├── script-decomposition.md
 │       │   ├── visual-design-principles.md
+│       │   ├── production-profiles.md
+│       │   ├── visual-lock-and-complexity-budget.md
 │       │   ├── storyboard-contract.md
 │       │   ├── audio-and-timing.md
 │       │   ├── caption-system.md
@@ -69,12 +71,15 @@ my-ai-manual/
 │       ├── schemas/
 │       │   ├── brief.schema.json
 │       │   ├── audio-meta.schema.json
-│       │   └── render-plan.schema.json
+│       │   ├── render-plan.schema.json
+│       │   └── pixel-audit.schema.json
 │       ├── templates/
 │       │   ├── BRIEF.example.md
 │       │   ├── SCRIPT.example.md
-│       │   └── STORYBOARD.example.md
+│       │   ├── STORYBOARD.example.md
+│       │   └── pixel-audit.example.json
 │       └── scripts/
+│           └── validate_project.py
 └── README.md
 ```
 
@@ -168,6 +173,8 @@ BRIEF
 ```
 
 最终音频只在叙事和分镜锁定后生成；通过音频验收后，实测 cue 才成为执行阶段唯一主时钟。
+
+2.1.0 起，3 分钟内观点口播和知识讲解默认使用 `page-isolated` 生产剖面，并由 `render-plan.json` 统一锁定背景、字幕外观、页面边角和复杂度预算。最终交付必须把引擎检查与最终 MP4 像素审查分开记录。
 
 ## 使用方式
 

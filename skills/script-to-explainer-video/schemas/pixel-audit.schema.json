@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pixel-audit.schema.json",
+  "title": "Final MP4 Pixel Audit",
+  "type": "object",
+  "required": ["final_file", "sample_interval_seconds", "checks", "evidence_files"],
+  "properties": {
+    "final_file": {"type": "string", "minLength": 1},
+    "sample_interval_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+    "checks": {
+      "type": "object",
+      "required": ["background_consistency", "corner_labels", "caption_appearance", "scene_residue"],
+      "properties": {
+        "background_consistency": {"const": "PASS"},
+        "corner_labels": {"const": "PASS"},
+        "caption_appearance": {"const": "PASS"},
+        "scene_residue": {"const": "PASS"}
+      },
+      "additionalProperties": false
+    },
+    "evidence_files": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

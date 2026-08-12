@@ -7,15 +7,18 @@
     "schema_version",
     "storyboard_hash",
     "audio_hash",
+    "production_profile",
     "canvas",
     "fps",
     "audio_file",
+    "style_lock",
     "scenes"
   ],
   "properties": {
     "schema_version": {"type": "string"},
     "storyboard_hash": {"type": "string", "pattern": "^sha256:"},
     "audio_hash": {"type": "string", "pattern": "^sha256:"},
+    "production_profile": {"type": "string", "enum": ["page-isolated", "continuous-diagram"]},
     "canvas": {
       "type": "object",
       "required": ["width", "height"],
@@ -30,11 +33,44 @@
     "caption_file": {"type": "string"},
     "engine": {"type": "string", "enum": ["remotion", "hyperframes"]},
     "style_tokens": {"type": "object"},
+    "style_lock": {
+      "type": "object",
+      "required": ["color_mode", "background_token", "caption", "page_chrome"],
+      "properties": {
+        "color_mode": {"type": "string", "enum": ["dark", "light", "mixed-intentional"]},
+        "background_token": {"type": "string", "minLength": 1},
+        "caption": {
+          "type": "object",
+          "required": ["background", "background_alpha", "outline_px", "shadow", "max_lines"],
+          "properties": {
+            "background": {"type": "string", "enum": ["none", "solid", "translucent"]},
+            "background_alpha": {"type": "number", "minimum": 0, "maximum": 1},
+            "outline_px": {"type": "number", "minimum": 0},
+            "shadow": {"type": "boolean"},
+            "max_lines": {"type": "integer", "minimum": 1, "maximum": 2},
+            "position": {"type": "string", "enum": ["bottom", "center", "top"]},
+            "safe_margin_px": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+        "page_chrome": {
+          "type": "object",
+          "required": ["corner_label", "page_number", "headline"],
+          "properties": {
+            "corner_label": {"type": "string", "enum": ["required", "hidden"]},
+            "page_number": {"type": "string", "enum": ["required", "hidden"]},
+            "headline": {"type": "string", "enum": ["required", "hidden"]}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "scenes": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "beat_ids", "start_frame", "end_frame", "states", "events"],
+        "required": ["id", "beat_ids", "start_frame", "end_frame", "background_token", "chrome", "complexity", "persistent_elements", "states", "events"],
         "properties": {
           "id": {"type": "string"},
           "beat_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
@@ -42,6 +78,30 @@
           "end_frame": {"type": "integer", "minimum": 1},
           "visual_job": {"type": "string"},
           "pattern": {"type": "string"},
+          "background_token": {"type": "string", "minLength": 1},
+          "background_change_reason": {"type": "string"},
+          "chrome": {
+            "type": "object",
+            "required": ["corner_label", "page_number", "headline"],
+            "properties": {
+              "corner_label": {"type": "string"},
+              "page_number": {"type": "string"},
+              "headline": {"type": "string"}
+            },
+            "additionalProperties": false
+          },
+          "complexity": {
+            "type": "object",
+            "required": ["focal_points", "content_groups", "simultaneous_text_blocks", "primary_motion_relations"],
+            "properties": {
+              "focal_points": {"type": "integer", "minimum": 0},
+              "content_groups": {"type": "integer", "minimum": 0},
+              "simultaneous_text_blocks": {"type": "integer", "minimum": 0},
+              "primary_motion_relations": {"type": "integer", "minimum": 0}
+            },
+            "additionalProperties": false
+          },
+          "persistent_elements": {"type": "array", "items": {"type": "string"}},
           "states": {
             "type": "array",
             "items": {

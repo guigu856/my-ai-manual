@@ -1,0 +1,16 @@
+{
+  "final_file": "final.mp4",
+  "sample_interval_seconds": 0.5,
+  "checks": {
+    "background_consistency": "PASS",
+    "corner_labels": "PASS",
+    "caption_appearance": "PASS",
+    "scene_residue": "PASS"
+  },
+  "evidence_files": [
+    "qc/contact-sheet.png",
+    "qc/caption-check.png",
+    "qc/corner-label-audit.json"
+  ],
+  "notes": []
+}

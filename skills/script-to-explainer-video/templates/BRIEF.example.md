@@ -12,8 +12,15 @@ aspect_ratio: 7:5
 target_duration_seconds: 45
 rewrite_mode: allowed
 tone: 冷静、直接、有轻微反差
-style_preset: minimal-editorial
+style_preset: industrial-system-lab
 voice_preference: 剪映软件中的真人口播女音色
+production_profile: page-isolated
+color_mode: dark
+background_token: background.system-lab.dark
+caption_background: none
+caption_outline_px: 0
+caption_shadow: false
+page_chrome: required
 ---
 
 # 创作目标
