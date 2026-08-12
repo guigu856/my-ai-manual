@@ -8,12 +8,12 @@ belief_gap: 没有看见任务定义会决定模型搜索和输出方向
 emotional_shift: 焦虑和追赶工具 → 清晰和可执行
 narrative_type: reframe
 platform: douyin
-aspect_ratio: 9:16
+aspect_ratio: 7:5
 target_duration_seconds: 45
 rewrite_mode: allowed
 tone: 冷静、直接、有轻微反差
 style_preset: minimal-editorial
-voice_preference: 自然青年男声
+voice_preference: 剪映软件中的真人口播女音色
 ---
 
 # 创作目标
