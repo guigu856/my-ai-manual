@@ -1,0 +1,4 @@
+interface:
+  display_name: "视频参考拆解"
+  short_description: "自动下载、抽帧、分析声音并生成通俗易懂的五章视频拆解报告"
+  default_prompt: "拆解这个参考视频，读取真实画面和声音证据，生成普通用户也能看懂的五章 DOCX 报告。"
