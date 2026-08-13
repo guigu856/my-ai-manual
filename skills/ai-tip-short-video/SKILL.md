@@ -1,21 +1,21 @@
 ---
 name: ai-tip-short-video
 description: |
-  将日常使用 AI 的感悟、技巧或笔记，制作为 45–90 秒抖音竖屏技巧分享短视频。
+  将日常使用 AI 的感悟、技巧或笔记，制作为 45–90 秒技巧分享短视频。
   严格四段式：共鸣 → 问题本质 → 解决方案概要 → 反问互动。只讲重点；视频内禁止私域引流。
-  画面与动效必须按四段镜头配方表选型，禁止自由发挥。默认 Remotion、9:16、kinetic typography。
+  画面与动效必须按四段镜头配方表选型，禁止自由发挥。默认 Remotion、7:5、kinetic typography。
   封面、标题与发布文案一并产出；完整提示词包不在视频内交付。
   触发：AI 使用笔记/碎碎念/主题、技巧短视频、抖音 AI 干货、四段式短视频、Remotion 技巧视频。
   不要用于：长文讲解、真人口播实拍剪辑、复杂连续 diagram 长片、纯文案改写。
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
   engine: remotion
-  aspect: "9:16"
+  aspect: "7:5"
 ---
 
-# AI Tip Short Video（抖音 AI 技巧短视频）
+# AI Tip Short Video（AI 技巧短视频）
 
-将「日常 AI 使用笔记」转化为系列风格统一、高信息密度的竖屏短视频。
+将「日常 AI 使用笔记」转化为系列风格统一、高信息密度的短视频。
 本 Skill **自包含**：不依赖仓库内其他 Skill；仅凭本目录即可完成从文案到 Remotion 实现的约束。
 
 ## 核心原则（不可违反）
@@ -47,7 +47,7 @@ metadata:
 ## 输入
 
 至少其一：原始笔记/碎碎念、明确主题、已写四段草稿。  
-可选：系列名、主色、Logo、时长、声线。  
+可选：系列名、主色、Logo、时长、声线、画幅覆盖（未指定时默认 7:5）。  
 信息不足用默认值；仅当核心痛点无法识别时暂停确认。
 
 ## 输出作品包
@@ -82,6 +82,7 @@ metadata:
 - 受众
 - 看完应掌握的方法概要
 - 系列与视觉方向（默认 kinetic 知识卡）
+- 画幅（默认 7:5 / 1400×1000；仅当用户明确要求时覆盖）
 
 **Gate 1**：能用「如何解决 X」概括，且单一主命题。
 
@@ -119,6 +120,7 @@ metadata:
 ### 阶段 5：Remotion 实现（Gate 5）
 
 必读 `references/remotion-implementation.md`。  
+Composition 默认 `width: 1400, height: 1000`（7:5）。  
 组件只实现 playbook 中已选配方；不得引入未列出的运动类型。
 
 **Gate 5**：可渲染；无 CSS 动画；无散落绝对秒数；配方与分镜一致。
@@ -130,13 +132,13 @@ metadata:
 - 每段配方合法且焦点单一
 - 方案条数/顺序与口播一致
 - 安全区与可读性
-- style_lock 一致
+- style_lock 与画幅一致
 
 ## 默认参数
 
 | 参数 | 默认 |
 |------|------|
-| 画幅 | 9:16（1080×1920） |
+| 画幅 | **7:5（1400×1000）**；仅用户明确要求其他比例时覆盖 |
 | fps | 30 |
 | 时长 | 45–90s |
 | 引擎 | Remotion |
@@ -149,7 +151,7 @@ metadata:
 
 - BRIEF 变更主痛点 → 下游全失效
 - SCRIPT 变更 → 分镜/实现/成片失效
-- 配方或 style_lock 变更 → 实现与成片失效
+- 配方或 style_lock 或画幅变更 → 实现与成片失效
 
 ## 停止条件
 
@@ -164,5 +166,5 @@ metadata:
 |------|------|
 | `references/four-act-motion-playbook.md` | **四段镜头配方强制路由** |
 | `references/remotion-implementation.md` | Remotion 实现硬约束 |
-| `references/series-design-system.md` | 封面、标题、style_lock |
+| `references/series-design-system.md` | 封面、标题、style_lock、画幅 |
 | `references/four-act-script.md` | 口播四段与零私域 |
