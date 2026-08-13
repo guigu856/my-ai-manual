@@ -14,6 +14,12 @@ my-ai-manual/
 │   ├── 代码编写规范.md
 │   └── 文档编写规范.md
 ├── skills/
+│   ├── ai-tip-short-video/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       ├── remotion-constraints.md
+│   │       ├── series-design-system.md
+│   │       └── four-act-script.md
 │   ├── idea-to-platform-content/
 │   │   ├── SKILL.md
 │   │   └── references/
@@ -45,41 +51,17 @@ my-ai-manual/
 │   │   ├── scripts/
 │   │   ├── templates/
 │   │   └── tests/
+│   ├── explainer-video-review/
+│   │   ├── SKILL.md
+│   │   └── resources/
 │   └── script-to-explainer-video/
 │       ├── SKILL.md
 │       ├── DESIGN.md
 │       ├── references/
-│       │   ├── narrative-design.md
-│       │   ├── script-decomposition.md
-│       │   ├── visual-design-principles.md
-│       │   ├── production-profiles.md
-│       │   ├── visual-lock-and-complexity-budget.md
-│       │   ├── storyboard-contract.md
-│       │   ├── audio-and-timing.md
-│       │   ├── caption-system.md
-│       │   ├── motion-language.md
-│       │   ├── engine-routing.md
-│       │   └── quality-gates.md
 │       ├── resources/
-│       │   └── motion-patterns/
-│       │       ├── index.md
-│       │       ├── concept-chain.md
-│       │       ├── comparison.md
-│       │       ├── hierarchy.md
-│       │       ├── cycle-feedback.md
-│       │       └── state-transformation.md
 │       ├── schemas/
-│       │   ├── brief.schema.json
-│       │   ├── audio-meta.schema.json
-│       │   ├── render-plan.schema.json
-│       │   └── pixel-audit.schema.json
 │       ├── templates/
-│       │   ├── BRIEF.example.md
-│       │   ├── SCRIPT.example.md
-│       │   ├── STORYBOARD.example.md
-│       │   └── pixel-audit.example.json
 │       └── scripts/
-│           └── validate_project.py
 └── README.md
 ```
 
@@ -104,6 +86,20 @@ my-ai-manual/
 - 文档内容的最终形态规范
 
 ## Skills
+
+### `skills/ai-tip-short-video/`
+
+将日常使用 AI 的感悟与技巧，制作为 45–90 秒抖音竖屏技巧短视频。
+
+- 固定四段式：共鸣 → 问题本质 → 解决方案概要 → 反问互动
+- 视频口播与画面禁止私域引流；进群引导仅放在发布文案与评论区
+- 默认 Remotion、9:16、page-isolated、kinetic typography
+- 动效与实现约束提炼自官方 Remotion Agent Skills、社区 video-director 与本仓库 explainer 生产规范
+- `references/remotion-constraints.md`：帧驱动、clamp、Sequence 相对性、入场纪律、竖屏安全区等硬约束
+- `references/series-design-system.md`：标题公式、封面、style_lock、四段画面逻辑
+- `references/four-act-script.md`：四段口播写法
+
+与 `script-to-explainer-video` 配合：通用叙事/动效/QC 复用后者；本 Skill 负责抖音技巧短视频的结构特化与发布物料。
 
 ### `skills/idea-to-platform-content/`
 
@@ -175,6 +171,10 @@ BRIEF
 最终音频只在叙事和分镜锁定后生成；通过音频验收后，实测 cue 才成为执行阶段唯一主时钟。
 
 2.1.0 起，3 分钟内观点口播和知识讲解默认使用 `page-isolated` 生产剖面，并由 `render-plan.json` 统一锁定背景、字幕外观、页面边角和复杂度预算。最终交付必须把引擎检查与最终 MP4 像素审查分开记录。
+
+### `skills/explainer-video-review/`
+
+对已渲染的口播或概念动效视频做成片审查（视觉表达、空间连贯、音画时序、字幕可读性）。
 
 ## 使用方式
 
