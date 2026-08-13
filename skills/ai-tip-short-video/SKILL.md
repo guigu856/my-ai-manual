@@ -2,203 +2,167 @@
 name: ai-tip-short-video
 description: |
   将日常使用 AI 的感悟、技巧或笔记，制作为 45–90 秒抖音竖屏技巧分享短视频。
-  严格采用四段式结构（共鸣 → 问题本质 → 解决方案概要 → 反问互动），只讲重点，无私域引流口播。
-  使用 Remotion 实现 kinetic typography 与统一系列动效；封面、标题与发布文案一并产出。
-  完整提示词包与进阶资料不在视频内交付，由独立资料包 Skill 或人工进群流程处理。
-  触发：用户提供 AI 使用笔记/碎碎念/主题，要求做技巧短视频、抖音 AI 干货、四段式短视频、Remotion 技巧视频等。
-  不要用于：长文讲解、真人口播实拍剪辑、需要复杂连续 diagram 的长概念片、纯文案改写。
+  严格四段式：共鸣 → 问题本质 → 解决方案概要 → 反问互动。只讲重点；视频内禁止私域引流。
+  画面与动效必须按四段镜头配方表选型，禁止自由发挥。默认 Remotion、9:16、kinetic typography。
+  封面、标题与发布文案一并产出；完整提示词包不在视频内交付。
+  触发：AI 使用笔记/碎碎念/主题、技巧短视频、抖音 AI 干货、四段式短视频、Remotion 技巧视频。
+  不要用于：长文讲解、真人口播实拍剪辑、复杂连续 diagram 长片、纯文案改写。
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   engine: remotion
   aspect: "9:16"
 ---
 
 # AI Tip Short Video（抖音 AI 技巧短视频）
 
-将「日常 AI 使用笔记」转化为系列风格统一、高信息密度、可批量生产的竖屏短视频。
-本 Skill 在仓库既有 `script-to-explainer-video` 之上做垂直特化：固定四段式叙事、强制 Remotion、9:16、page-isolated、无私域口播。
-
-## 与 script-to-explainer-video 的关系
-
-- **复用**：叙事纪律、动效语言、视觉任务、质量门禁、render-plan 思想、Remotion 实现约束。
-- **特化**：固定四段式；默认 9:16；默认 45–90s；默认 kinetic-type 为主；发布物料（封面/标题/描述）纳入交付；视频脚本文案禁止任何进群/私域引导。
-- **执行时**：通用细则优先读取 `../script-to-explainer-video/references/`；本 Skill 的 `references/` 只写冲突时的覆盖规则与系列设计系统。
+将「日常 AI 使用笔记」转化为系列风格统一、高信息密度的竖屏短视频。
+本 Skill **自包含**：不依赖仓库内其他 Skill；仅凭本目录即可完成从文案到 Remotion 实现的约束。
 
 ## 核心原则（不可违反）
 
 1. **四段式唯一结构**  
    共鸣（8–12s）→ 问题本质（12–18s）→ 解决方案概要（20–30s）→ 反问互动（5–8s）。  
-   总时长目标 45–90 秒。禁止额外「总结升华」「产品软广」「资料包口播」。
+   总时长 45–90 秒。禁止额外总结升华、产品软广、资料包口播。
 
 2. **视频内零私域**  
-   口播与画面文字不得出现「关注进群」「领资料包」「私信领取」等引导。  
-   私域转化只允许出现在发布附加文案与评论区自评。
+   口播与画面不得出现关注进群、领资料包、私信领取等。  
+   私域仅允许写在 `PUBLISH.md`（发布描述与建议评论）。
 
-3. **只讲重点**  
-   解决方案阶段最多给出 1–3 个可执行方法概要。完整提示词模板、多场景变体留给资料包。
+3. **动效按配方表路由，禁止自由发挥**  
+   必须读取并遵守 `references/four-act-motion-playbook.md`。  
+   每段只能使用该段「允许配方」；文案角色决定配方，不得先想酷炫再找理由。
 
-4. **动效服务于理解，不为动而动**  
-   遵守 `script-to-explainer-video/references/motion-language.md` 与 `visual-design-principles.md`。  
-   每个 Scene 只有一个主要视觉焦点；默认 page-isolated。
+4. **只讲重点**  
+   方案段最多 1–3 条可执行方法骨架；完整提示词留给资料包渠道。
 
 5. **Remotion 帧驱动**  
-   所有动画必须由 `useCurrentFrame()` + `interpolate()`（优先）或 `spring()` 驱动。  
-   禁止 CSS transitions / animations、Tailwind animate 类、`Date.now()`、随机数。  
-   参考官方与社区约束：始终 clamp；`useCurrentFrame` 相对最近 `<Sequence>`；元素入场必须有动画，禁止硬切静止出现。
+   遵守 `references/remotion-implementation.md`：仅 `useCurrentFrame` + `interpolate`/`spring`；禁止 CSS/Tailwind 动画；必须 clamp；入场必动、结论必 hold。
 
 6. **系列视觉锁定**  
-   全系列共享同一 `style_lock`（主色、字体、标题层级、转场时长、Logo 位置、安全区）。  
-   封面与视频片头使用同一标题公式，保证「一眼知道讲什么问题」。
+   遵守 `references/series-design-system.md`。全系列共享 style_lock；封面与片头同一标题公式。
 
-7. **确定性与可检查**  
-   输出可复现源码 + render-plan 思想的时间轴 + 最终 MP4 + 发布物料。
+7. **确定性交付**  
+   可复现源码 + 成片说明 + 发布物料。
 
 ## 输入
 
-至少其一：
+至少其一：原始笔记/碎碎念、明确主题、已写四段草稿。  
+可选：系列名、主色、Logo、时长、声线。  
+信息不足用默认值；仅当核心痛点无法识别时暂停确认。
 
-- 原始笔记 / 碎碎念 / 使用感悟
-- 明确主题（如「如何解决 AI 脑补误判」）
-- 已写好的四段式草稿
-
-可选：系列名、主色、已有 Logo、目标时长、声线偏好。
-
-信息不足时采用默认值继续；仅当核心痛点无法识别时暂停确认。
-
-## 输出作品包契约
+## 输出作品包
 
 ```text
 <project>/
-├── BRIEF.md                 # 核心痛点、受众、一句话价值
-├── SCRIPT.md                # 四段式口播（无私域）
-├── STORYBOARD.md            # 分镜 + 状态链
-├── PUBLISH.md               # 标题、封面文案、发布描述、建议置顶评论（含进群引导）
-├── cover/                   # 封面图或生成提示
-├── audio/                   # 可选：master + cues
-├── src/                     # Remotion 源码
+├── BRIEF.md
+├── SCRIPT.md              # 四段口播，无私域
+├── STORYBOARD.md          # 每段标注选用的配方 ID（如 A1、C1）
+├── PUBLISH.md             # 标题、封面、描述、建议评论（私域仅此处）
+├── cover/
+├── audio/                 # 可选
+├── src/                   # Remotion
 │   ├── Root.tsx
 │   ├── Video.tsx
 │   ├── theme/
 │   ├── scenes/
 │   └── components/
-├── render-notes.md          # 时长、fps、composition id、渲染命令
-└── final.mp4                # 成片（可后置）
+├── render-notes.md
+└── final.mp4              # 可后置
 ```
 
 ## 工作流
 
-### 阶段 0：识别新建或续作
+### 阶段 0：新建或续作
 
-已有项目则从最后通过的 Gate 继续；上游变更按失效规则清理下游。不覆盖用户手改文件。
+已有项目从最后通过 Gate 继续。不覆盖用户手改文件。
 
 ### 阶段 1：BRIEF（Gate 1）
 
-产出 `BRIEF.md`：
-
 - 核心痛点（一句话）
-- 目标受众（日常用 AI 的创作者/职场人等）
-- 看完后应掌握的方法概要
-- 系列归属与视觉方向（默认 kinetic 知识卡）
+- 受众
+- 看完应掌握的方法概要
+- 系列与视觉方向（默认 kinetic 知识卡）
 
-**Gate 1**：能用「如何解决 X」或等价标题公式概括，且只保留一个主命题。
+**Gate 1**：能用「如何解决 X」概括，且单一主命题。
 
-### 阶段 2：SCRIPT 四段式（Gate 2）
+### 阶段 2：SCRIPT（Gate 2）
 
-严格按下列时间预算写口播：
+读取 `references/four-act-script.md`。
 
-| 段 | 角色 | 时长 | 要求 |
-|----|------|------|------|
-| 1 共鸣 | 点出痛点，制造认同 | 8–12s | 口语化问题场景，禁止解决方案抢跑 |
-| 2 本质 | 揭示原因 | 12–18s | 简洁机制，建立专业感，不堆术语 |
-| 3 方案 | 1–3 个可执行方法概要 | 20–30s | 编号清晰；只给骨架，不给完整长提示词 |
-| 4 反问 | 互动收束 | 5–8s | 只反问使用经验；禁止进群话术 |
+| 段 | 时长 | 要求 |
+|----|------|------|
+| 共鸣 | 8–12s | 场景化痛点；方案不抢跑 |
+| 本质 | 12–18s | 机制一句话，少术语 |
+| 方案 | 20–30s | 1–3 条骨架；条数将锁定画面 |
+| 反问 | 5–8s | 只问经验；禁止进群话术 |
 
-产出 `SCRIPT.md`。  
-**Gate 2**：无私域语句；每段推进主命题；删任意段会损伤完整性。
+**Gate 2**：无私域；每段推进主命题。
 
-### 阶段 3：STORYBOARD + 发布物料（Gate 3）
+### 阶段 3：STORYBOARD + 发布（Gate 3）
 
-读取本 Skill `references/series-design-system.md`、`references/remotion-constraints.md`，  
-并复用 `../script-to-explainer-video/references/visual-design-principles.md`、`motion-language.md`。
+**必读** `references/four-act-motion-playbook.md` 与 `references/series-design-system.md`。
 
-默认生产剖面：`page-isolated`。  
-表达形式优先：`kinetic-type`（大标题、关键词、编号卡片）。  
-每段对应 1–3 个 Scene；每个 Scene 写清 visual_job、起态、状态链、终态、hold。
+对每一段：
 
-同时产出 `PUBLISH.md`：
+1. 根据文案职责判定角色（共鸣/本质/方案/反问）
+2. 仅从该段允许配方中选择（写入 STORYBOARD，如 `recipe: C1`）
+3. 写清主焦点、入场、hold、退场；方案段条数与口播一致且顺序一致
 
-- 标题（「如何解决 + 问题」或「AI + 场景 + 方法」）
-- 封面文案与视觉描述（大号标题 + 关键词高亮 + 系列标识）
-- 发布描述（可含进群引导）
-- 建议评论区自评（可含进群引导）
+同时写 `PUBLISH.md`（标题、封面描述、发布文案、建议置顶评论）。
 
-**Gate 3**：分镜覆盖四段；画面不是字幕复述；封面 1 秒内可读懂主题；视频脚本仍无私域。
+**Gate 3**：每段有合法配方 ID；画面非字幕复读；封面一眼可读主题；视频脚本仍无私域。
 
-### 阶段 4：音频（可选但推荐）
+### 阶段 4：音频（推荐）
 
-若需要口播：生成配音并取得 cue，作为主时钟。  
-若纯画面字卡视频：可按分镜估算帧数，但仍须固定 fps 与总帧数。
+有口播则生成配音与 cue 作主时钟；纯字卡则固定 fps 与总帧数。
 
 ### 阶段 5：Remotion 实现（Gate 5）
 
-遵守 `references/remotion-constraints.md`（来自官方 remotion-best-practices、社区 video-director、本仓库 explainer 约束的提炼）：
+必读 `references/remotion-implementation.md`。  
+组件只实现 playbook 中已选配方；不得引入未列出的运动类型。
 
-- 手动搭建项目结构，禁止依赖交互式 `create-video` wizard
-- 时间全部来自 frame / Sequence；`interpolate` 必须 clamp
-- 主题 token 集中在 `theme/`
-- 每个元素入场有动画；场景间默认短 cross-dissolve 或统一硬切+入场（系列内选一种并锁定）
-- 文字安全区：避开底部 15% 与边缘；竖屏关键字号足够大
-- 先渲染关键 still，再渲染完整视频
+**Gate 5**：可渲染；无 CSS 动画；无散落绝对秒数；配方与分镜一致。
 
-**Gate 5**：源码可渲染；无 CSS 动画；无绝对秒数散落在组件内。
+### 阶段 6：验收（Gate 6）
 
-### 阶段 6：质量验收（Gate 6）
-
-检查清单（精简版，完整语义见 explainer quality-gates）：
-
-- 四段时长与节奏是否符合预算
-- 视频内是否出现任何私域引导
-- 标题/封面是否一眼说明问题
-- 文字是否可读、无重叠、无出安全区
-- 动效是否服务焦点（非装饰漂浮）
-- 系列 style_lock 是否一致
-
-通过后交付作品包。
+- 四段时长与节奏
+- 视频内零私域
+- 每段配方合法且焦点单一
+- 方案条数/顺序与口播一致
+- 安全区与可读性
+- style_lock 一致
 
 ## 默认参数
 
-| 参数 | 默认值 |
-|------|--------|
+| 参数 | 默认 |
+|------|------|
 | 画幅 | 9:16（1080×1920） |
 | fps | 30 |
 | 时长 | 45–90s |
 | 引擎 | Remotion |
-| 生产剖面 | page-isolated |
-| 主表达 | kinetic-type + 编号卡片 |
-| BGM | 默认无；若有则极轻且不压人声 |
-| 字幕 | 可开；与口播语义短语对齐；不与画面大字重复整句 |
+| 背景 | 单集内深或浅二选一锁死 |
+| 段间转场 | 硬切 + 新段入场（系列可改为统一短 dissolve 8–12 帧，但全系列只能选一种） |
+| BGM | 默认无 |
 | 私域 | 仅 PUBLISH.md |
 
 ## 失效规则
 
-- BRIEF 变更主痛点 → 下游全部失效
-- SCRIPT 变更口播 → STORYBOARD、音频、实现、成片失效
-- STORYBOARD 仅改布局 → 音频可复用，实现与成片失效
-- style_lock 变更 → 实现与成片失效
+- BRIEF 变更主痛点 → 下游全失效
+- SCRIPT 变更 → 分镜/实现/成片失效
+- 配方或 style_lock 变更 → 实现与成片失效
 
 ## 停止条件
 
-- 无法识别单一核心痛点
-- 用户坚持在视频口播中加入进群引导（应拒绝并改到 PUBLISH）
-- Remotion 依赖缺失且无法安装
-- 事实性错误会影响方案可信度
+- 无法识别单一痛点
+- 用户要求视频内出现进群引导（拒绝，改到 PUBLISH）
+- 试图使用 playbook 未列出的动效类型且无改文案角色
+- Remotion 依赖缺失无法安装
 
 ## Reference 地图
 
-| 主题 | 文件 |
+| 文件 | 用途 |
 |------|------|
-| 系列视觉与封面 | `references/series-design-system.md` |
-| Remotion 硬约束 | `references/remotion-constraints.md` |
-| 四段式话术 | `references/four-act-script.md` |
-| 通用动效/视觉 | `../script-to-explainer-video/references/motion-language.md` 等 |
-| 成片审查 | `../explainer-video-review/SKILL.md` |
+| `references/four-act-motion-playbook.md` | **四段镜头配方强制路由** |
+| `references/remotion-implementation.md` | Remotion 实现硬约束 |
+| `references/series-design-system.md` | 封面、标题、style_lock |
+| `references/four-act-script.md` | 口播四段与零私域 |
