@@ -13,12 +13,12 @@ from _common import SkillError, emit, fail
 
 WORD_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 HEADINGS = (
-    "第一章：先用一分钟看懂这条视频",
-    "第二章：音乐和声音是怎么带动视频的",
-    "第三章：画面是怎么一段段剪出来的",
-    "第四章：声音和画面是怎么配合的",
-    "第五章：如果重新做一条，应该学什么",
+    "第一部分：这条视频是怎么立起来的",
+    "第二部分：它用了什么素材和音乐",
+    "第三部分：它怎么一段段剪出来的",
+    "第四部分：如果重新做一条，应该学什么",
 )
+TIMELINE_COLUMNS = ("画面构成", "画面处理", "附加效果", "声音与节拍", "与下一段的衔接")
 FORBIDDEN_TERMS = (
     "MusicSection",
     "MusicLayer",
@@ -35,7 +35,7 @@ FORBIDDEN_TERMS = (
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="检查五章通俗版视频拆解 DOCX。")
+    parser = argparse.ArgumentParser(description="检查四部分通俗版视频拆解 DOCX。")
     parser.add_argument("report", type=Path)
     parser.add_argument("--rendered-pages-dir", type=Path)
     return parser
@@ -67,7 +67,7 @@ def validate(report: Path, rendered_pages_dir: Path | None) -> dict[str, object]
     if missing:
         errors["missing_headings"] = missing
     elif positions != sorted(positions):
-        errors["heading_order"] = "五章标题没有按固定顺序出现"
+        errors["heading_order"] = "四部分标题没有按固定顺序出现"
     forbidden = [term for term in FORBIDDEN_TERMS if term in text]
     if forbidden:
         errors["forbidden_terms"] = forbidden
@@ -77,6 +77,9 @@ def validate(report: Path, rendered_pages_dir: Path | None) -> dict[str, object]
         warnings.append("报告中没有找到证据说明")
     if not re.search(r"把握程度[：:]?\s*(高|中|低)", text):
         warnings.append("报告中没有找到把握程度")
+    missing_columns = [column for column in TIMELINE_COLUMNS if column not in text]
+    if missing_columns:
+        warnings.append(f"时间线缺列：{'、'.join(missing_columns)}")
     rendered_pages = []
     if rendered_pages_dir is not None:
         if rendered_pages_dir.is_dir():
@@ -90,7 +93,7 @@ def validate(report: Path, rendered_pages_dir: Path | None) -> dict[str, object]
     return {
         "ok": not errors,
         "report": str(report.resolve()),
-        "chapter_count": sum(heading in text for heading in HEADINGS),
+        "part_count": sum(heading in text for heading in HEADINGS),
         "errors": errors,
         "warnings": warnings,
         "rendered_pages": rendered_pages,
