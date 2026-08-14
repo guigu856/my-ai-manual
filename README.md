@@ -20,6 +20,7 @@ my-ai-manual/
 │   ├── idea-to-xiaohongshu-post/
 │   ├── social-content-publisher/
 │   ├── explainer-video-review/
+│   ├── video-reference-breakdown/
 │   └── script-to-explainer-video/
 └── README.md
 ```
@@ -71,6 +72,18 @@ my-ai-manual/
 ### `skills/explainer-video-review/`
 
 已渲染讲解类视频的成片审查。
+
+### `skills/video-reference-breakdown/`
+
+把本地视频、链接或平台分享文本自动处理成普通用户可读的视频参考拆解报告。
+
+- `SKILL.md`：来源识别、下载、媒体探测、抽帧、声音分析、补充取证、DOCX 生成与页面验收主流程
+- `scripts/`：来源固化、真实媒体证据生成、重点区间加密抽帧和报告合同验证
+- `references/`：画面、声音、证据语言和五章报告细则
+- `templates/report-outline.md`：固定五章写作骨架
+- `evals/` 与 `tests/`：触发边界、真实 FFmpeg 流程和报告结构验证
+
+报告固定包含“先用一分钟看懂”“音乐和声音”“逐段画面”“声音和画面配合”“重新创作方法”五章，不要求读者理解内部分析模型术语，也不承担视频复刻和成片质量审查。
 
 ## 使用方式
 
