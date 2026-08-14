@@ -21,6 +21,7 @@ my-ai-manual/
 │   ├── social-content-publisher/
 │   ├── explainer-video-review/
 │   ├── video-reference-breakdown/
+│   ├── reference-guided-jianying-creation/
 │   └── script-to-explainer-video/
 └── README.md
 ```
@@ -84,6 +85,12 @@ my-ai-manual/
 - `evals/` 与 `tests/`：触发边界、真实 FFmpeg 流程和报告结构验证
 
 报告固定包含“这条视频是怎么立起来的”“它用了什么素材和音乐”“它怎么一段段剪出来的”“如果重新做一条，应该学什么”四部分，不要求读者理解内部分析模型术语，也不承担视频复刻和成片质量审查。
+
+### `skills/reference-guided-jianying-creation/`
+
+读取任意结构的视频参考报告、分析笔记或聊天文字，理解其中的制作思路，为新主题主动准备素材和 BGM，生成逐镜剪辑表，并通过电脑操作能力在本机剪映完成可完整预览的时间线。
+
+本 Skill 不重新拆解参考视频，不要求报告具有固定章节，不调用项目内剪辑组件，也不执行最终导出。
 
 ## 使用方式
 
