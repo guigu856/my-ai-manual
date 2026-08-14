@@ -49,7 +49,7 @@ class ReferenceGuidedJianyingSkillTests(unittest.TestCase):
     def test_shot_table_contains_only_execution_fields(self) -> None:
         template = (SKILL_ROOT / "templates/shot-table.md").read_text(encoding="utf-8")
 
-        self.assertIn("| 时间 | 使用素材 | 画面怎么处理 | 文字 | 声音 | 衔接方式 |", template)
+        self.assertIn("| 时间 | 使用素材 | 画面处理 | 附加效果 | 文字 | 声音与节拍 | 衔接方式 |", template)
         self.assertNotIn("证据编号", template)
         self.assertNotIn("来自哪一章", template)
 
