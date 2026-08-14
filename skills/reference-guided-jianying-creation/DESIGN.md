@@ -140,9 +140,11 @@ skills/reference-guided-jianying-creation/
 │   ├── shot-table.md
 │   ├── jianying-operation.md
 │   └── preview-check.md
-└── templates/
-    ├── creative-plan.md
-    └── shot-table.md
+├── templates/
+│   ├── creative-plan.md
+│   └── shot-table.md
+└── tests/
+    └── test_skill_contract.py
 ```
 
 首版不增加自定义自动化脚本。主 `SKILL.md` 维护触发、阶段顺序、确认点和执行边界；具体方法按阶段读取对应 reference。
@@ -158,4 +160,4 @@ skills/reference-guided-jianying-creation/
 - 剪映操作只走可见界面；
 - 完成后停留在完整预览状态，不点击导出；
 - 只要求拆解参考视频、审查已有成片或导出视频时不触发本 Skill。
-
+- Skill 合同测试和 `quick_validate.py` 通过。
